@@ -6,458 +6,66 @@
 <title>SiteSupply â€” Construction Supply Marketplace</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 <style>
-:root {
-  --navy:#0F1D3D;--orange:#F45B1A;--emerald:#0D8C5E;--white:#FFF;--gray-50:#F8F9FB;
-  --gray-100:#F0F2F5;--gray-200:#E2E5EA;--gray-400:#959DA8;--gray-500:#6B7480;
-  --gray-600:#4A5159;--gray-700:#2D3339;--gray-800:#1A1E23;--gray-900:#0D1114;
-  --amber:#F59E0B;--red:#DC2626;
-  --shadow:0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04);
-  --shadow-lg:0 12px 32px rgba(0,0,0,.08);
-  --radius:10px;--radius-lg:14px;--radius-pill:9999px;
-  --font:'Inter',-apple-system,sans-serif;
-}
+:root{--navy:#0F1D3D;--orange:#F45B1A;--emerald:#0D8C5E;--white:#FFF;--gray-50:#F8F9FB;--gray-100:#F0F2F5;--gray-200:#E2E5EA;--gray-400:#959DA8;--gray-500:#6B7480;--gray-600:#4A5159;--gray-700:#2D3339;--gray-800:#1A1E23;--gray-900:#0D1114;--amber:#F59E0B;--radius:10px;--radius-lg:14px;--radius-pill:9999px;--shadow:0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04);--shadow-lg:0 12px 32px rgba(0,0,0,.08);--font:'Inter',-apple-system,sans-serif}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{font-size:16px;scroll-behavior:smooth}
 body{font-family:var(--font);background:var(--gray-50);color:var(--gray-700);line-height:1.6;min-height:100vh;-webkit-font-smoothing:antialiased}
-
-.topnav{background:rgba(255,255,255,.85);backdrop-filter:blur(16px);border-bottom:1px solid var(--gray-200);position:sticky;top:0;z-index:100;padding:0 1.5rem}
+.topnav{background:rgba(255,255,255,.85);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--gray-200);position:sticky;top:0;z-index:100;padding:0 1.5rem}
 .topnav-inner{max-width:1280px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:56px}
-.nav-brand{font-weight:800;font-size:1.125rem;color:var(--gray-900);text-decoration:none;letter-spacing:-0.02em;display:flex;align-items:center;gap:8px}
-.nav-brand-dot{width:8px;height:8px;border-radius:50%;background:var(--orange)}
 .nav-links{display:flex;align-items:center;gap:.25rem}
 .nav-links a{padding:.4rem .75rem;border-radius:var(--radius);font-size:.8125rem;font-weight:500;color:var(--gray-500);text-decoration:none;transition:all .15s}
 .nav-links a:hover{background:var(--gray-100);color:var(--gray-800)}
-.nav-links a.active{background:var(--gray-100);color:var(--gray-900);font-weight:600}
-.nav-cta{background:var(--orange);color:var(--white);border:none;padding:.45rem 1.125rem;border-radius:var(--radius-pill);font:600 .8125rem var(--font);cursor:pointer;transition:all .15s}
-.nav-cta:hover{background:#E0480F;box-shadow:var(--shadow-lg)}
-.role-badge{font-size:.6875rem;font-weight:600;padding:.2rem .6rem;border-radius:var(--radius-pill);margin-left:.5rem}
-.role-buyer{background:#EBF5FF;color:#1E40AF}
-.role-supplier{background:#FFF7ED;color:#C2410C}
-
+.btn{display:inline-flex;align-items:center;gap:.4rem;justify-content:center;padding:.5rem 1.125rem;border:none;border-radius:var(--radius);font:600 .8125rem var(--font);cursor:pointer;transition:all .15s;text-decoration:none}
+.btn:hover{transform:translateY(-1px)}
+.btn-primary{background:var(--navy);color:var(--white)}.btn-primary:hover{background:#1A3366;box-shadow:var(--shadow-lg)}
+.btn-orange{background:var(--orange);color:var(--white);border-radius:var(--radius-pill);padding:.55rem 1.5rem}.btn-orange:hover{background:#E0480F;box-shadow:var(--shadow-lg)}
+.btn-emerald{background:var(--emerald);color:var(--white)}
+.btn-outline{background:transparent;border:1.5px solid var(--gray-200);color:var(--gray-600)}.btn-outline:hover{border-color:var(--gray-400);background:var(--gray-50)}
+.btn-sm{padding:.3rem .75rem;font-size:.75rem}
+.btn-block{width:100%}
 .page-container{max-width:1280px;margin:0 auto;padding:0 1.5rem}
-.hero{padding:3.5rem 0 2.5rem;text-align:center;background:linear-gradient(180deg,var(--white),var(--gray-50))}
-.hero-badge{display:inline-block;background:#FFF0E8;color:var(--orange);padding:.25rem .75rem;border-radius:var(--radius-pill);font-size:.6875rem;font-weight:600;letter-spacing:.03em;text-transform:uppercase;margin-bottom:1rem}
-.hero h1{font-size:clamp(1.75rem,5vw,3rem);font-weight:800;color:var(--gray-900);line-height:1.1;letter-spacing:-0.04em;margin-bottom:.75rem}
-.hero h1 span{color:var(--orange)}
-.hero p{font-size:1.0625rem;color:var(--gray-500);max-width:560px;margin:0 auto 1.5rem;line-height:1.6}
-.hero-stats{display:flex;justify-content:center;gap:2.5rem;margin-top:1rem;flex-wrap:wrap}
-.hero-stat{text-align:center}
-.hero-stat-value{font-size:1.75rem;font-weight:800;color:var(--gray-900);letter-spacing:-0.03em}
-.hero-stat-label{font-size:.6875rem;color:var(--gray-400);font-weight:600;text-transform:uppercase;letter-spacing:.06em}
-
-.page{display:none}
-.page.active{display:block;animation:fadeIn .3s ease}
-@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
-
-.section{padding:2.5rem 0}
-.section-header{text-align:center;margin-bottom:1.5rem}
-.section-header h2{font-size:1.5rem;font-weight:700;color:var(--gray-900);letter-spacing:-0.03em;margin-bottom:.25rem}
-.section-header p{font-size:.875rem;color:var(--gray-500)}
-
-.cat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:.625rem}
-.cat-card{background:var(--white);border-radius:var(--radius-lg);padding:1.25rem .875rem;text-align:center;cursor:pointer;transition:all .25s;box-shadow:var(--shadow);border:1px solid transparent;text-decoration:none;color:inherit;display:block}
-.cat-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg);border-color:var(--gray-200)}
-.cat-card-icon{font-size:1.75rem;margin-bottom:.5rem}
-.cat-card-label{font-size:.75rem;font-weight:600;color:var(--gray-700)}
-.cat-card-count{font-size:.625rem;color:var(--gray-400);margin-top:.125rem}
-
-.form-page-header{padding:1.75rem 0 1.25rem;text-align:center;background:var(--white);border-bottom:1px solid var(--gray-100);margin-bottom:1.5rem}
-.form-page-header h1{font-size:1.5rem;font-weight:700;color:var(--gray-900)}
-.form-page-header p{color:var(--gray-500);font-size:.875rem;margin-top:.125rem}
-
-.form-card{background:var(--white);border-radius:var(--radius-lg);box-shadow:var(--shadow);padding:1.5rem;margin-bottom:1rem;border:1px solid var(--gray-100)}
+.card{background:var(--white);border-radius:var(--radius-lg);box-shadow:var(--shadow);padding:1.5rem;margin-bottom:1rem;border:1px solid var(--gray-100)}
+.card:hover{box-shadow:var(--shadow-lg)}
 .form-grid{display:grid;grid-template-columns:1fr;gap:.75rem}
-@media(min-width:640px){.form-grid{grid-template-columns:1fr 1fr}.form-grid .full-width{grid-column:1/-1}}
+@media(min-width:640px){.form-grid{grid-template-columns:1fr 1fr}.form-grid .full{grid-column:1/-1}}
 label{display:block;font-size:.75rem;font-weight:600;color:var(--gray-600);margin-bottom:.2rem}
 input,select,textarea{width:100%;padding:.5rem .625rem;border:1.5px solid var(--gray-200);border-radius:var(--radius);font:400 .875rem var(--font);color:var(--gray-800);background:var(--gray-50);transition:all .15s}
 input:focus,select:focus,textarea:focus{outline:none;background:var(--white);border-color:var(--navy);box-shadow:0 0 0 3px rgba(15,29,61,.08)}
-
-.btn{display:inline-flex;align-items:center;gap:.4rem;justify-content:center;padding:.5rem 1.125rem;border:none;border-radius:var(--radius);font:600 .8125rem var(--font);cursor:pointer;transition:all .15s;text-decoration:none}
-.btn-primary{background:var(--navy);color:var(--white)}
-.btn-primary:hover{background:#1A3366}
-.btn-orange{background:var(--orange);color:var(--white);border-radius:var(--radius-pill);padding:.55rem 1.5rem}
-.btn-orange:hover{background:#E0480F}
-.btn-emerald{background:var(--emerald);color:var(--white)}
-.btn-sm{padding:.3rem .625rem;font-size:.6875rem}
-.btn-block{width:100%}
-
-.quote-card{background:var(--white);border-radius:var(--radius-lg);box-shadow:var(--shadow);padding:1rem 1.125rem;margin-bottom:.5rem;border:1px solid var(--gray-100);transition:all .2s}
-.quote-card:hover{border-color:var(--gray-200);box-shadow:var(--shadow-lg)}
-.q-supplier{font-weight:700;color:var(--gray-900);font-size:.875rem}
-.q-loc{font-size:.6875rem;color:var(--gray-400)}
-.q-price{font-size:1.25rem;font-weight:800;color:var(--gray-900);letter-spacing:-0.03em}
-.q-currency{font-size:.625rem;font-weight:500;color:var(--gray-400);text-transform:uppercase}
-.q-meta{display:flex;flex-wrap:wrap;gap:.5rem;font-size:.6875rem;color:var(--gray-500);margin-top:.375rem}
-.q-distance{display:inline-flex;align-items:center;gap:3px;background:var(--gray-50);color:var(--gray-600);padding:.12rem .45rem;border-radius:var(--radius-pill);font-size:.625rem;font-weight:600}
-.q-rating{color:var(--amber);font-size:.75rem}
-.q-actions{display:flex;gap:.375rem;margin-top:.5rem}
-
 .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem;margin:1rem 0}
 @media(max-width:768px){.stats-row{grid-template-columns:repeat(2,1fr)}}
 .stat-item{background:var(--white);border-radius:var(--radius-lg);padding:1rem;text-align:center;box-shadow:var(--shadow);border:1px solid var(--gray-100)}
-.stat-item-value{font-size:1.5rem;font-weight:800;color:var(--gray-900);letter-spacing:-0.03em}
-.stat-item-label{font-size:.625rem;color:var(--gray-400);font-weight:600;text-transform:uppercase;letter-spacing:.05em}
-
+.stat-value{font-size:1.5rem;font-weight:800;color:var(--gray-900);letter-spacing:-0.03em}
+.stat-label{font-size:.625rem;color:var(--gray-400);font-weight:600;text-transform:uppercase;letter-spacing:.05em}
 .badge{display:inline-block;padding:.12rem .45rem;border-radius:var(--radius-pill);font-size:.625rem;font-weight:600}
 .badge-outline{background:transparent;border:1px solid var(--gray-200);color:var(--gray-500)}
-
 .data-table{width:100%;border-collapse:collapse;font-size:.75rem}
 .data-table th{text-align:left;padding:.5rem .625rem;background:var(--gray-50);color:var(--gray-400);font-weight:600;font-size:.625rem;text-transform:uppercase;letter-spacing:.05em;border-bottom:2px solid var(--gray-100)}
 .data-table td{padding:.5rem .625rem;border-bottom:1px solid var(--gray-50);color:var(--gray-600)}
 .data-table tr:hover td{background:var(--gray-50)}
-
-#map{height:400px;border-radius:var(--radius-lg);margin-bottom:1rem;z-index:1}
-
-.chat-panel{background:var(--white);border-radius:var(--radius-lg);box-shadow:var(--shadow);border:1px solid var(--gray-100);max-height:400px;overflow-y:auto;padding:1rem}
-.chat-msg{margin-bottom:.75rem;padding:.5rem .75rem;border-radius:var(--radius);max-width:80%;font-size:.8125rem}
-.chat-msg.buyer{background:var(--navy);color:var(--white);margin-left:auto}
-.chat-msg.supplier{background:var(--gray-100);color:var(--gray-800)}
-.chat-input-row{display:flex;gap:.5rem;margin-top:.5rem}
-
-.empty{text-align:center;padding:3rem 1rem}
-.empty-icon{font-size:2.5rem;margin-bottom:.5rem;opacity:.3}
-.empty p{color:var(--gray-400);font-size:.8125rem;margin-bottom:1rem}
-
-.site-footer{border-top:1px solid var(--gray-200);padding:1.5rem;text-align:center;color:var(--gray-400);font-size:.6875rem;margin-top:2rem}
-
-.util-bar{display:flex;align-items:center;gap:.5rem;margin-bottom:1rem;justify-content:flex-end;flex-wrap:wrap}
-.cur-toggle{display:flex;background:var(--gray-100);border-radius:var(--radius);padding:2px}
-.cur-toggle button{background:transparent;color:var(--gray-500);border:none;padding:.25rem .55rem;border-radius:var(--radius);font:600 .625rem var(--font);cursor:pointer;transition:all .15s}
-.cur-toggle button.active{background:var(--white);color:var(--gray-900);box-shadow:0 0 0 1px rgba(0,0,0,.06)}
-
-.mobile-bottomnav{display:none;position:fixed;bottom:0;left:0;right:0;z-index:99;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);border-top:1px solid var(--gray-200);padding:.25rem 0;justify-content:space-around}
-.mobile-bottomnav a{display:flex;flex-direction:column;align-items:center;gap:1px;padding:.3rem .4rem;color:var(--gray-400);text-decoration:none;font-size:.5rem;font-weight:500;min-width:52px}
+#map{height:400px;border-radius:var(--radius-lg);margin:1rem 0;z-index:1}
+.empty{text-align:center;padding:3rem 1rem;color:var(--gray-400);font-size:.8125rem}
+.fade{animation:fade .3s ease}@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.mobile-bottomnav{display:none;position:fixed;bottom:0;left:0;right:0;z-index:99;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);border-top:1px solid var(--gray-200);padding:.2rem 0;justify-content:space-around}
+.mobile-bottomnav a{display:flex;flex-direction:column;align-items:center;gap:1px;padding:.25rem .4rem;color:var(--gray-400);text-decoration:none;font-size:.5rem;font-weight:500;min-width:52px}
 .mobile-bottomnav a.active{color:var(--gray-900)}
-.mobile-bottomnav a svg{width:16px;height:16px}
-
-@media(max-width:768px){
-  .hero{padding:2rem 0 1.5rem}
-  .nav-links{display:none}
-  .mobile-bottomnav{display:flex}
-  .page-container{padding:0 .75rem}
-  .site-footer{margin-bottom:56px}
-  .cat-grid{grid-template-columns:repeat(auto-fill,minmax(100px,1fr))}
-}
+@media(max-width:768px){.nav-links{display:none}.mobile-bottomnav{display:flex}.page-container{padding:0 .75rem}}
 </style>
 </head>
 <body>
+<div id="root"></div>
+<nav class="mobile-bottomnav" id="mob-nav"></nav>
 
-<nav class="topnav">
-  <div class="topnav-inner">
-    <a href="#/" class="nav-brand"><span class="nav-brand-dot"></span>SiteSupply</a>
-    <div class="nav-links">
-      <a href="#/" data-route="/">Home</a>
-      <a href="#/search" data-route="/search">Aggregates</a>
-      <a href="#/rental" data-route="/rental">Rental</a>
-      <a href="#/freight" data-route="/freight">Freight</a>
-      <a href="#/projects" data-route="/projects">Projects</a>
-      <a href="#/suppliers" data-route="/suppliers">Suppliers</a>
-    </div>
-    <div style="display:flex;align-items:center;gap:.5rem">
-      <span id="role-indicator" class="role-badge role-buyer">Buyer</span>
-      <button class="nav-cta" onclick="toggleRole()">Switch to Supplier</button>
-    </div>
-  </div>
-</nav>
+<script type="text/babel">
+const {useState,useEffect,useReducer,useCallback,useMemo,createContext,useContext} = React;
 
-<div id="app-content">
-  <div id="home" class="page active">
-    <section class="hero">
-      <div class="page-container">
-        <div class="hero-badge">North America's Construction Marketplace</div>
-        <h1>Construction supply,<br><span>instantly compared.</span></h1>
-        <p>Real quotes from verified Ontario suppliers. Know the nearest, cheapest, highest-rated â€” in seconds.</p>
-        <a href="#/search" class="btn btn-orange" style="font-size:.9375rem;padding:.65rem 1.75rem">Get Quotes â†’</a>
-        <div class="hero-stats">
-          <div class="hero-stat"><div class="hero-stat-value" id="hero-suppliers">12</div><div class="hero-stat-label">Verified Suppliers</div></div>
-          <div class="hero-stat"><div class="hero-stat-value">10</div><div class="hero-stat-label">Categories</div></div>
-          <div class="hero-stat"><div class="hero-stat-value">ON+US</div><div class="hero-stat-label">Region</div></div>
-          <div class="hero-stat"><div class="hero-stat-value" id="hero-saved">0</div><div class="hero-stat-label">Saved Quotes</div></div>
-        </div>
-      </div>
-    </section>
-    <section class="section">
-      <div class="page-container">
-        <div class="section-header"><h2>What do you need?</h2><p>Select a category for instant quote comparison with real Ontario suppliers.</p></div>
-        <div class="cat-grid" id="cat-grid"></div>
-      </div>
-    </section>
-    <div class="page-container">
-      <div class="section-header"><h2>Supplier Map</h2><p>View all suppliers across Ontario and nearby US states.</p></div>
-      <div id="map"></div>
-    </div>
-  </div>
-
-  <div id="search" class="page"></div>
-  <div id="rental" class="page"></div>
-  <div id="site-services" class="page"></div>
-  <div id="freight" class="page"></div>
-  <div id="irrigation" class="page"></div>
-  <div id="erosion" class="page"></div>
-  <div id="fuel-lubricants" class="page"></div>
-  <div id="fencing" class="page"></div>
-  <div id="dumpsters" class="page"></div>
-  <div id="fuel-tanks" class="page"></div>
-  <div id="projects" class="page"></div>
-  <div id="dashboard" class="page"></div>
-  <div id="supplier-portal" class="page"></div>
-  <div id="suppliers" class="page"></div>
-  <div id="messages" class="page"></div>
-
-  <footer class="site-footer">&copy; 2026 SiteSupply &mdash; Verified Ontario Construction Suppliers &middot; Real Pricing &middot; Instant Comparison</footer>
-</div>
-
-<nav class="mobile-bottomnav">
-  <a href="#/" data-route="/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>Home</a>
-  <a href="#/search" data-route="/search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>Search</a>
-  <a href="#/projects" data-route="/projects"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>Projects</a>
-  <a href="#/messages" data-route="/messages"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Chat</a>
-</nav>
-
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script>
-const S={currency:'CAD',rate:1.37,role:'buyer',savedQuotes:[],projects:[],messages:[]};
-
-const SUPPLIERS=[
-  {id:'S1',name:'Dufferin Aggregates',city:'Toronto, ON',coords:[43.70,-79.42],country:'CA',cats:['aggregates'],rating:4.7,av:'DA',website:'dufferinaggregates.com',phone:'(416) 555-0101'},
-  {id:'S2',name:'Miller Group',city:'Markham, ON',coords:[43.86,-79.34],country:'CA',cats:['aggregates','freight'],rating:4.5,av:'MG',website:'millergroup.ca',phone:'(905) 555-0102'},
-  {id:'S3',name:'Strada Aggregates',city:'Vaughan, ON',coords:[43.82,-79.50],country:'CA',cats:['aggregates','erosion'],rating:4.6,av:'SA',website:'stradagrp.com',phone:'(416) 555-0103'},
-  {id:'S4',name:'Brock Aggregates',city:'Whitby, ON',coords:[43.88,-78.95],country:'CA',cats:['aggregates'],rating:4.4,av:'BA',website:'brockaggregates.com',phone:'(905) 555-0104'},
-  {id:'S5',name:'Battlefield Equipment',city:'Barrie, ON',coords:[44.39,-79.69],country:'CA',cats:['rental'],rating:4.8,av:'BE',website:'battlefieldequipment.ca',phone:'(705) 555-0105'},
-  {id:'S6',name:'NAM Rentals',city:'London, ON',coords:[42.98,-81.25],country:'CA',cats:['rental','freight'],rating:4.6,av:'NR',website:'namrentals.com',phone:'(519) 555-0106'},
-  {id:'S7',name:'CleanCo Site Services',city:'Mississauga, ON',coords:[43.59,-79.64],country:'CA',cats:['site-services','fencing','dumpsters'],rating:4.5,av:'CC',website:'cleanco.ca',phone:'(905) 555-0107'},
-  {id:'S8',name:'GreenFlow Irrigation',city:'Guelph, ON',coords:[43.55,-80.25],country:'CA',cats:['irrigation','erosion'],rating:4.4,av:'GF',website:'greenflow.ca',phone:'(519) 555-0108'},
-  {id:'S9',name:'FuelExpress Ontario',city:'Hamilton, ON',coords:[43.26,-79.87],country:'CA',cats:['fuel-lubricants','fuel-tanks'],rating:4.3,av:'FE',website:'fuelexpress.ca',phone:'(905) 555-0109'},
-  {id:'S10',name:'NorthernFreight',city:'Sudbury, ON',coords:[46.49,-81.01],country:'CA',cats:['freight'],rating:4.2,av:'NF',website:'northernfreight.ca',phone:'(705) 555-0110'},
-  {id:'S11',name:'Michigan Aggregates',city:'Detroit, MI',coords:[42.33,-83.05],country:'US',cats:['aggregates','freight'],rating:4.5,av:'MA',website:'michiganagg.com',phone:'(313) 555-0111'},
-  {id:'S12',name:'Buffalo Equipment',city:'Buffalo, NY',coords:[42.89,-78.88],country:'US',cats:['rental'],rating:4.4,av:'BF',website:'buffaloequip.com',phone:'(716) 555-0112'},
-];
-
-const PRICING={
-  aggregates:{sand:{min:12,max:18,unit:'tonne'},stone_34:{min:23,max:28,unit:'tonne'},gravel:{min:13,max:17,unit:'tonne'},granular_a:{min:15,max:19,unit:'tonne'},granular_b:{min:13,max:16,unit:'tonne'},screenings:{min:10,max:14,unit:'tonne'},delivery_per_km:{min:3,max:8,unit:'per tonne'}},
-  rental:{excavator_mini:{day:350,week:1650,month:5200},excavator_mid:{day:650,week:2900,month:9200},skid_steer:{day:280,week:1200,month:3800},loader:{day:520,week:2400,month:7600},compactor:{day:200,week:900,month:2800}},
-  freight:{per_km:{dump_truck:2.80,flatbed:3.20,lowboy:4.50},base:{dump_truck:85,flatbed:110,lowboy:160}},
-};
-
-const CATEGORIES=[
-  {id:'aggregates',name:'Aggregates',icon:'ğŸª¨',desc:'Stone, sand, gravel, limestone',fields:[{id:'material',label:'Material',type:'select',opts:['3/4\" Clear Stone','Granular A','Granular B','Sand','Gravel','Screenings']},{id:'quantity',label:'Quantity (tonnes)',type:'number',min:1,val:10},{id:'date',label:'Date Required',type:'date'},{id:'city',label:'City',type:'text',placeholder:'e.g., Toronto'},{id:'province',label:'Province/State',type:'text',placeholder:'e.g., ON'}]},
-  {id:'rental',name:'Equipment Rental',icon:'ğŸšœ',desc:'Excavators, skid steers, loaders',fields:[{id:'equipment',label:'Equipment',type:'select',opts:['Mini Excavator (3-5 ton)','Mid Excavator (8-15 ton)','Skid Steer','Wheel Loader','Compactor']},{id:'period',label:'Rental Period',type:'select',opts:['Day','Week','Month']},{id:'duration',label:'Duration',type:'number',min:1,val:1},{id:'city',label:'City',type:'text',placeholder:'e.g., Toronto'},{id:'province',label:'Province/State',type:'text',placeholder:'e.g., ON'}]},
-  {id:'freight',name:'Freight & Hauling',icon:'ğŸš›',desc:'Material and equipment transport',fields:[{id:'load',label:'Load Type',type:'select',opts:['Aggregates','Equipment','Mixed Materials']},{id:'weight',label:'Weight (tonnes)',type:'number',min:1,val:20},{id:'pickup',label:'Pickup Location',type:'text'},{id:'delivery',label:'Delivery Location',type:'text'},{id:'vehicle',label:'Vehicle Type',type:'select',opts:['Dump Truck','Flatbed','Lowboy']},{id:'date',label:'Date Required',type:'date'}]},
-  {id:'site-services',name:'Site Services',icon:'ğŸš»',desc:'Toilets, fencing, waste management',fields:[{id:'service',label:'Service',type:'select',opts:['Portable Toilet','Temp Fencing','Dumpster Rental','Roll-off Bin']},{id:'quantity',label:'Quantity',type:'number',min:1,val:1},{id:'duration',label:'Duration (days)',type:'number',min:1,val:30},{id:'city',label:'City',type:'text'},{id:'province',label:'Province/State',type:'text'}]},
-  {id:'irrigation',name:'Irrigation & Drainage',icon:'ğŸ’§',desc:'Sprinklers, drip systems, drainage',fields:[{id:'system',label:'System',type:'select',opts:['Sprinkler','Drip','Drainage','Combined']},{id:'area',label:'Area',type:'text',placeholder:'e.g., 2 acres'},{id:'city',label:'City',type:'text'},{id:'province',label:'Province/State',type:'text'},{id:'date',label:'Date',type:'date'}]},
-  {id:'erosion',name:'Erosion Control',icon:'ğŸŒ¿',desc:'Silt fences, blankets, wattles',fields:[{id:'type',label:'Type',type:'select',opts:['Silt Fence','Erosion Blanket','Straw Wattles','Rip Rap']},{id:'quantity',label:'Qty/Length (ft)',type:'number',min:1,val:500},{id:'city',label:'City',type:'text'},{id:'province',label:'Province/State',type:'text'},{id:'date',label:'Date',type:'date'}]},
-  {id:'fuel-lubricants',name:'Fuel & Lubricants',icon:'â›½',desc:'Diesel, DEF, oils',fields:[{id:'product',label:'Product',type:'select',opts:['Diesel','DEF Fluid','Engine Oil','Hydraulic Oil']},{id:'quantity',label:'Quantity (L)',type:'number',min:1,val:1000},{id:'city',label:'City',type:'text'},{id:'province',label:'Province/State',type:'text'},{id:'date',label:'Date',type:'date'}]},
-  {id:'fencing',name:'Fencing',icon:'ğŸ—ï¸',desc:'Temporary chain-link, barricades',fields:[{id:'type',label:'Type',type:'select',opts:['Chain-Link','Barricade','Hoarding']},{id:'length',label:'Length (ft)',type:'number',min:1,val:200},{id:'duration',label:'Duration (days)',type:'number',min:1,val:30},{id:'city',label:'City',type:'text'},{id:'province',label:'Province/State',type:'text'}]},
-  {id:'dumpsters',name:'Dumpsters',icon:'ğŸ—‘ï¸',desc:'10-30 ydÂ³ bins',fields:[{id:'size',label:'Size',type:'select',opts:['10 ydÂ³','20 ydÂ³','30 ydÂ³']},{id:'duration',label:'Duration (days)',type:'number',min:1,val:14},{id:'city',label:'City',type:'text'},{id:'province',label:'Province/State',type:'text'},{id:'date',label:'Date',type:'date'}]},
-  {id:'fuel-tanks',name:'Fuel Tanks',icon:'ğŸ›¢ï¸',desc:'On-site fuel storage',fields:[{id:'capacity',label:'Capacity (L)',type:'number',min:100,val:1000},{id:'location',label:'Site Location',type:'text',placeholder:'e.g., Construction Site A'},{id:'city',label:'City',type:'text'},{id:'province',label:'Province/State',type:'text'},{id:'date',label:'Date',type:'date'}]},
-];
-
-function hKm(l1,lo1,l2,lo2){const R=6371,dl=(l2-l1)*Math.PI/180,dL=(lo2-lo1)*Math.PI/180,a=Math.sin(dl/2)**2+Math.cos(l1*Math.PI/180)*Math.cos(l2*Math.PI/180)*Math.sin(dL/2)**2;return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a))}
-function getCoords(city){if(!city)return null;city=city.trim().toLowerCase();for(const s of SUPPLIERS)if(s.city.toLowerCase().includes(city)||city.includes(s.city.split(',')[0].toLowerCase()))return s.coords;return[43.65,-79.38]}
-function fmtPrice(u){const v=S.currency==='CAD'?u:S.currency==='USD'?Math.round(u/S.rate*100)/100:u,sym=S.currency==='CAD'?'C$':'US$';return sym+v.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}
-function rand(min,max){return Math.floor(Math.random()*(max-min+1))+min}
-function timeAgo(){const tzs={EST:-5,EDT:-4,CST:-6,CDT:-5,MST:-7,MDT:-6,PST:-8,PDT:-7};const d=new Date();const tz=d.getMonth()>=2&&d.getMonth()<=10?'EDT':'EST';const off=tzs[tz];const local=new Date(d.getTime()+off*3600000);return local.toLocaleString('en-US',{month:'short',day:'numeric',hour:'numeric',minute:'2-digit',timeZone:'UTC'})+' '+tz}
-
-function genQuotes(cat,item,qty,quantity,buyerCity){
-  const bc=getCoords(buyerCity);
-  return SUPPLIERS.filter(s=>s.cats.includes(cat)||cat==='aggregates'&&s.cats.includes('aggregates')).map(s=>{
-    const d=bc?Math.round(hKm(bc[0],bc[1],s.coords[0],s.coords[1])):null;
-    let priceUSD=0;
-    if(cat==='aggregates'){
-      if(item.includes('Stone'))priceUSD=rand(23,28)*(quantity||10);
-      else if(item.includes('Granular A'))priceUSD=rand(15,19)*(quantity||10);
-      else if(item.includes('Granular B'))priceUSD=rand(13,16)*(quantity||10);
-      else if(item.includes('Sand'))priceUSD=rand(12,18)*(quantity||10);
-      else if(item.includes('Gravel'))priceUSD=rand(13,17)*(quantity||10);
-      else priceUSD=rand(10,14)*(quantity||10);
-      if(d)priceUSD+=d*rand(3,8);
-    }else if(cat==='rental'){
-      const rates=PRICING.rental;
-      if(item.includes('Mini')){const r=rates.excavator_mini;priceUSD=qty==='Week'?r.week*(quantity||1):qty==='Month'?r.month*(quantity||1):r.day*(quantity||1)}
-      else if(item.includes('Mid')){const r=rates.excavator_mid;priceUSD=qty==='Week'?r.week*(quantity||1):qty==='Month'?r.month*(quantity||1):r.day*(quantity||1)}
-      else if(item.includes('Skid')){const r=rates.skid_steer;priceUSD=qty==='Week'?r.week*(quantity||1):qty==='Month'?r.month*(quantity||1):r.day*(quantity||1)}
-      else if(item.includes('Loader')){const r=rates.loader;priceUSD=qty==='Week'?r.week*(quantity||1):qty==='Month'?r.month*(quantity||1):r.day*(quantity||1)}
-      else{const r=rates.compactor;priceUSD=qty==='Week'?r.week*(quantity||1):qty==='Month'?r.month*(quantity||1):r.day*(quantity||1)}
-    }else if(cat==='freight'){
-      const vt=item.includes('Dump')?'dump_truck':item.includes('Flat')?'flatbed':'lowboy';
-      priceUSD=PRICING.freight.base[vt]+(d||50)*PRICING.freight.per_km[vt];
-    }else{priceUSD=150+Math.floor(Math.random()*500);if(d)priceUSD+=Math.round(d*1.2)}
-    return{id:'Q'+Date.now()+Math.random().toString(36).slice(2,6),cat,item,qty:s.av+' Â· '+qty,supplierId:s.id,supplierName:s.name,supplierLoc:s.city,supplierCountry:s.country,supplierRating:s.rating,av:s.av,priceUSD,distanceKm:d,delivery:`${1+Math.floor(Math.random()*5)} days`,ts:new Date().toISOString(),website:s.website,phone:s.phone,coords:s.coords};
-  }).sort((a,b)=>(a.distanceKm||9999)-(b.distanceKm||9999));
-}
-
-function qCard(q){
-  const sv=S.savedQuotes.find(sq=>sq.id===q.id),fl=q.supplierCountry==='CA'?'ğŸ‡¨ğŸ‡¦':'ğŸ‡ºğŸ‡¸';
-  return `<div class="quote-card">
-    <div style="display:flex;justify-content:space-between;align-items:flex-start">
-      <div>
-        <div class="q-supplier">${q.supplierName} ${fl} <span style="font-size:.625rem;color:var(--gray-400)">${q.website}</span></div>
-        <div class="q-loc">${q.supplierLoc} Â· â˜ ${q.phone}</div>
-        <div class="q-rating" style="margin-top:1px">${'â˜…'.repeat(Math.floor(q.supplierRating))}${q.supplierRating%1>=.5?'Â½':''} ${q.supplierRating}</div>
-      </div>
-      <div style="text-align:right"><div class="q-price">${fmtPrice(q.priceUSD)}</div><div class="q-currency">${S.currency}</div></div>
-    </div>
-    <div class="q-meta"><span>ğŸ“¦ ${q.delivery}</span><span class="q-distance">ğŸ“ ${q.distanceKm?q.distanceKm+' km':'Unknown'}</span><span>ğŸ• ${timeAgo()}</span>${q.supplierCountry!=='CA'?'<span style="color:var(--orange)">âš  Cross-border</span>':''}</div>
-    <div class="q-actions">
-      <button class="btn ${sv?'btn-emerald':'btn-primary'} btn-sm" onclick="saveQuote('${q.id}')">${sv?'âœ“ Saved':'Save'}</button>
-      <button class="btn btn-sm" style="background:var(--gray-100);color:var(--gray-600)" onclick="openChat('${q.supplierId}','${q.supplierName}')">ğŸ’¬ Chat</button>
-      <button class="btn btn-sm" style="background:var(--gray-100);color:var(--gray-600)" onclick="addToProject('${q.id}')">ğŸ“ Project</button>
-    </div>
-  </div>`;
-}
-
-function renderResults(qs,cid){const el=document.getElementById(cid);if(!el)return;if(!qs||!qs.length){el.innerHTML='<div class="empty"><div class="empty-icon">ğŸ”</div><p>No suppliers found. Try a nearby city.</p></div>';return}el._q=qs;el.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem"><span style="font-size:.8125rem;color:var(--gray-400);font-weight:500">${qs.length} supplier${qs.length>1?'s':''} Â· ${timeAgo()}</span><select style="padding:.25rem .5rem;border:1px solid var(--gray-200);border-radius:var(--radius);font:400 .6875rem var(--font);color:var(--gray-600)" onchange="sortQuotes('${cid}',this.value)"><option value="distance">Nearest</option><option value="price">Cheapest</option><option value="rating">Top rated</option></select></div>${qs.map(qCard).join('')}`}
-
-function sortQuotes(cid,by){const el=document.getElementById(cid),qs=[...el._q];if(by==='price')qs.sort((a,b)=>a.priceUSD-b.priceUSD);else if(by==='rating')qs.sort((a,b)=>b.supplierRating-a.supplierRating);else qs.sort((a,b)=>(a.distanceKm||9999)-(b.distanceKm||9999));el._q=qs;renderResults(qs,cid)}
-
-function saveQuote(qid){const ids=['results-search','results-rental','results-site-services','results-freight','results-irrigation','results-erosion','results-fuel-lubricants','results-fencing','results-dumpsters','results-fuel-tanks'];let found=null;for(const id of ids){const el=document.getElementById(id);if(el&&el._q){found=el._q.find(q=>q.id===qid);if(found)break}}if(!found)return;const idx=S.savedQuotes.findIndex(q=>q.id===qid);idx>=0?S.savedQuotes.splice(idx,1):S.savedQuotes.push({...found,savedAt:new Date().toISOString()});updateUI()}
-
-function addToProject(qid){const ids=['results-search','results-rental','results-site-services','results-freight','results-irrigation','results-erosion','results-fuel-lubricants','results-fencing','results-dumpsters','results-fuel-tanks'];let found=null;for(const id of ids){const el=document.getElementById(id);if(el&&el._q){found=el._q.find(q=>q.id===qid);if(found)break}}if(!found)return;const pname=prompt('Project name:','My Project');if(!pname)return;let proj=S.projects.find(p=>p.name===pname);if(!proj){proj={name:pname,quotes:[],created:new Date().toISOString()};S.projects.push(proj)}if(!proj.quotes.find(q=>q.id===qid))proj.quotes.push({...found});alert(`Added to "${pname}". ${proj.quotes.length} quotes in project.`);updateUI()}
-
-function openChat(sid,sname){location.hash='#/messages';setTimeout(()=>{document.getElementById('chat-with').textContent=sname;document.getElementById('chat-sid').value=sid;document.getElementById('chat-panel').innerHTML=S.messages.filter(m=>m.supplierId===sid).map(m=>`<div class="chat-msg ${m.from==='me'?'buyer':'supplier'}"><strong>${m.from==='me'?'You':sname}</strong><br>${m.text}</div>`).join('')||'<div class="empty"><p>Start the conversation.</p></div>'},100)}
-
-function renderCategoryPage(cat){
-  const page=document.getElementById(cat.id);if(!page)return;
-  const today=new Date().toISOString().split('T')[0];
-  page.innerHTML=`
-    <div class="form-page-header"><h1>${cat.icon} ${cat.name}</h1><p>${cat.desc} â€” compare real Ontario supplier quotes.</p></div>
-    <div class="page-container">
-      <div class="form-card">
-        <form id="form-${cat.id}" class="form-grid">
-          ${cat.fields.map(f=>{
-            if(f.type==='select')return `<div${cat.fields.length<=3?' class="full-width"':''}><label>${f.label}</label><select id="${f.id}-${cat.id}" required>${f.opts.map(o=>`<option>${o}</option>`).join('')}</select></div>`;
-            if(f.type==='date')return `<div><label>${f.label}</label><input type="date" id="${f.id}-${cat.id}" value="${today}" required></div>`;
-            return `<div><label>${f.label}</label><input type="${f.type}" id="${f.id}-${cat.id}" placeholder="${f.placeholder||''}" ${f.min?'min="'+f.min+'"':''} value="${f.val||''}" required></div>`;
-          }).join('')}
-          <div class="full-width"><button type="submit" class="btn btn-orange btn-block">Compare Quotes</button></div>
-        </form>
-      </div>
-      <div class="util-bar">
-        <span style="font-size:.75rem;color:var(--gray-400)">Currency</span>
-        <div class="cur-toggle"><button class="active" data-cur="CAD" onclick="toggleCurrency('CAD')">C$ CAD</button><button data-cur="USD" onclick="toggleCurrency('USD')">US$ USD</button></div>
-        <span style="font-size:.75rem;color:var(--gray-400);margin-left:1rem">ğŸ• Times in EST/EDT</span>
-      </div>
-      <div id="results-${cat.id}"></div>
-    </div>`;
-  document.getElementById(`form-${cat.id}`).addEventListener('submit',function(e){
-    e.preventDefault();
-    let item='',qty='',city='',quantity=1;
-    if(cat.id==='aggregates'){item=document.getElementById(`material-${cat.id}`).value;quantity=parseInt(document.getElementById(`quantity-${cat.id}`).value)||10;qty=`${quantity} tonnes`;city=document.getElementById(`city-${cat.id}`).value}
-    else if(cat.id==='rental'){item=document.getElementById(`equipment-${cat.id}`).value;qty=document.getElementById(`period-${cat.id}`).value;const dur=parseInt(document.getElementById(`duration-${cat.id}`).value)||1;quantity=dur;city=document.getElementById(`city-${cat.id}`).value}
-    else if(cat.id==='freight'){item=document.getElementById(`vehicle-${cat.id}`).value;qty=document.getElementById(`load-${cat.id}`).value;quantity=parseInt(document.getElementById(`weight-${cat.id}`).value)||20;city=document.getElementById(`pickup-${cat.id}`).value}
-    else{const f1=cat.fields[0];item=document.getElementById(`${f1.id}-${cat.id}`).value;const f2=cat.fields[1];qty=document.getElementById(`${f2.id}-${cat.id}`).value+(f2.type==='number'?' '+(f2.label||''):'');city=document.getElementById(`${cat.fields.find(f=>f.id==='city')?.id}-${cat.id}`)?.value||'Toronto'}
-    if(!city)city='Toronto';
-    const qs=genQuotes(cat.id,item,qty,quantity,city);
-    renderResults(qs,`results-${cat.id}`);
-  });
-}
-
-function renderProjectsPage(){
-  const p=document.getElementById('projects');if(!p)return;
-  if(!S.projects.length){p.innerHTML='<div class="form-page-header"><h1>Projects</h1><p>Save quotes into projects to track costs.</p></div><div class="page-container"><div class="empty"><div class="empty-icon">ğŸ“</div><p>No projects yet. Use "ğŸ“ Project" on any quote to start one.</p><a href="#/search" class="btn btn-orange">Get Quotes</a></div></div>';return}
-  p.innerHTML=`<div class="form-page-header"><h1>Projects</h1><p>${S.projects.length} project${S.projects.length>1?'s':''}</p></div><div class="page-container">${S.projects.map(pr=>{
-    const total=pr.quotes.reduce((s,q)=>s+q.priceUSD,0);
-    return `<div class="form-card">
-      <h3>ğŸ“ ${pr.name} <span style="font-size:.75rem;color:var(--gray-400);font-weight:400">Â· ${pr.quotes.length} quotes Â· ${fmtPrice(total)} total</span></h3>
-      ${pr.quotes.map(qCard).join('')}
-      <button class="btn btn-sm" style="background:var(--red);color:var(--white);margin-top:.5rem" onclick="deleteProject('${pr.name}')">Delete Project</button>
-    </div>`;
-  }).join('')}</div>`;
-}
-
-function deleteProject(name){S.projects=S.projects.filter(p=>p.name!==name);renderProjectsPage();updateUI()}
-
-function renderDashboard(){
-  const p=document.getElementById('dashboard');if(!p)return;
-  const total=S.savedQuotes.reduce((s,q)=>s+(S.currency==='CAD'?q.priceUSD:S.currency==='USD'?Math.round(q.priceUSD/S.rate*100)/100:q.priceUSD),0);
-  p.innerHTML=`<div class="form-page-header"><h1>Dashboard</h1><p>Your activity overview</p></div><div class="page-container">
-    <div class="stats-row"><div class="stat-item"><div class="stat-item-value">${S.savedQuotes.length}</div><div class="stat-item-label">Saved Quotes</div></div><div class="stat-item"><div class="stat-item-value">${S.projects.length}</div><div class="stat-item-label">Projects</div></div><div class="stat-item"><div class="stat-item-value">${fmtPrice(total)}</div><div class="stat-item-label">Est. Value</div></div><div class="stat-item"><div class="stat-item-value">${S.messages.length}</div><div class="stat-item-label">Messages</div></div></div>
-    ${S.savedQuotes.length?`<div style="overflow-x:auto"><table class="data-table"><thead><tr><th>Supplier</th><th>Item</th><th>Price</th><th>Distance</th><th>Saved</th></tr></thead><tbody>${S.savedQuotes.map(q=>`<tr><td><strong>${q.supplierName}</strong></td><td>${q.item} Ã— ${q.qty}</td><td>${fmtPrice(q.priceUSD)}</td><td>${q.distanceKm?q.distanceKm+' km':'N/A'}</td><td>${new Date(q.savedAt).toLocaleDateString()}</td></tr>`).join('')}</tbody></table></div>`:'<div class="empty"><p>Save quotes to build your dashboard.</p></div>'}
-  </div>`;
-}
-
-function renderSuppliersPage(){
-  const p=document.getElementById('suppliers');if(!p)return;
-  p.innerHTML=`<div class="form-page-header"><h1>Supplier Directory</h1><p>${SUPPLIERS.length} verified Ontario suppliers</p></div><div class="page-container">
-    <div style="display:flex;gap:.5rem;margin-bottom:1rem;flex-wrap:wrap"><input type="text" id="sup-search" placeholder="Filter..." style="max-width:220px;font-size:.75rem" oninput="fSuppliers()"><select id="sup-cat" onchange="fSuppliers()" style="max-width:180px;font-size:.75rem"><option value="all">All</option><option value="aggregates">Aggregates</option><option value="rental">Rental</option><option value="site-services">Site Services</option><option value="freight">Freight</option><option value="irrigation">Irrigation</option><option value="erosion">Erosion</option><option value="fuel-lubricants">Fuel</option><option value="fencing">Fencing</option><option value="dumpsters">Dumpsters</option><option value="fuel-tanks">Fuel Tanks</option></select></div>
-    <div id="sup-list">${SUPPLIERS.map(s=>`<div class="form-card" style="display:flex;gap:1rem;align-items:center;padding:.875rem 1rem;margin-bottom:.375rem" data-cats="${s.cats.join(',')}" data-name="${s.name.toLowerCase()}" data-city="${s.city.toLowerCase()}"><div style="width:44px;height:44px;border-radius:50%;background:var(--navy);color:var(--white);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.9375rem;flex-shrink:0">${s.av}</div><div style="flex:1"><div style="font-weight:600;color:var(--gray-800);font-size:.8125rem">${s.name} ${s.country==='CA'?'ğŸ‡¨ğŸ‡¦':'ğŸ‡ºğŸ‡¸'}</div><div style="font-size:.6875rem;color:var(--gray-400)">${s.city} Â· ${s.website} Â· â˜ ${s.phone}</div><div style="margin-top:3px">${s.cats.map(c=>`<span class="badge badge-outline">${c}</span>`).join(' ')}</div></div><div style="color:var(--amber);font-size:.8125rem;font-weight:600">â­ ${s.rating}</div></div>`).join('')}</div></div>`;
-}
-
-function fSuppliers(){const q=(document.getElementById('sup-search')?.value||'').toLowerCase(),cat=document.getElementById('sup-cat')?.value||'all';document.querySelectorAll('#sup-list .form-card').forEach(c=>{const n=c.dataset.name||'',ci=c.dataset.city||'',cs=(c.dataset.cats||'').split(',');c.style.display=(!q||n.includes(q)||ci.includes(q))&&(cat==='all'||cs.includes(cat))?'':'none'})}
-
-function renderMessages(){
-  const p=document.getElementById('messages');if(!p)return;
-  p.innerHTML=`<div class="form-page-header"><h1>Messages</h1><p>Chat with suppliers</p></div><div class="page-container">
-    <div class="form-card">
-      <div style="margin-bottom:.5rem"><strong>Chat with:</strong> <span id="chat-with">Select a supplier</span></div>
-      <div id="chat-panel" class="chat-panel"><div class="empty"><p>Click ğŸ’¬ Chat on any quote to start a conversation.</p></div></div>
-      <div class="chat-input-row"><input type="hidden" id="chat-sid"><input type="text" id="chat-input" placeholder="Type a message..." style="flex:1" onkeydown="if(event.key==='Enter')sendMsg()"><button class="btn btn-primary btn-sm" onclick="sendMsg()">Send</button></div>
-    </div>
-  </div>`;
-}
-
-function sendMsg(){const input=document.getElementById('chat-input');const sid=document.getElementById('chat-sid').value;const text=input.value.trim();if(!text||!sid)return;S.messages.push({supplierId:sid,from:'me',text,ts:new Date().toISOString()});const sname=SUPPLIERS.find(s=>s.id===sid)?.name||'Supplier';S.messages.push({supplierId:sid,to:'me',text:`Thanks for your message! We'll get back to you shortly. - ${sname}`,ts:new Date().toISOString()});input.value='';openChat(sid,sname)}
-
-function renderSupplierPortal(){
-  const p=document.getElementById('supplier-portal');if(!p)return;
-  p.innerHTML=`<div class="form-page-header"><h1>Supplier Portal</h1><p>Manage your listings and quotes</p></div><div class="page-container">
-    <div class="stats-row"><div class="stat-item"><div class="stat-item-value">0</div><div class="stat-item-label">Active Quotes</div></div><div class="stat-item"><div class="stat-item-value">0</div><div class="stat-item-label">Leads Today</div></div><div class="stat-item"><div class="stat-item-value">0</div><div class="stat-item-label">Conversion</div></div><div class="stat-item"><div class="stat-item-value">â€”</div><div class="stat-item-label">Response Time</div></div></div>
-    <div class="form-card"><h3>Your Listings</h3><p style="font-size:.8125rem;color:var(--gray-400)">Manage your services, pricing, and availability.</p>
-    <div style="display:grid;gap:.5rem;margin-top:.75rem">${SUPPLIERS.slice(0,3).map(s=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:.5rem;background:var(--gray-50);border-radius:var(--radius)"><span style="font-weight:600;font-size:.8125rem">${s.name}</span><span class="badge badge-outline">${s.cats.join(', ')}</span><button class="btn btn-sm" style="background:var(--gray-100);color:var(--gray-500)">Edit</button></div>`).join('')}</div></div>
-    <div class="empty"><p>Supplier portal is in beta. Full inventory management coming soon.</p></div>
-  </div>`;
-}
-
-let map;
-function initMap(){
-  if(!document.getElementById('map'))return;
-  map=L.map('map').setView([43.95,-79.5],7);
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a>'}).addTo(map);
-  const markers=[];
-  SUPPLIERS.forEach(s=>{
-    const m=L.marker(s.coords).addTo(map).bindPopup(`<strong>${s.name}</strong><br>${s.city}<br>â­ ${s.rating}<br>${s.cats.join(', ')}<br><a href="https://${s.website}" target="_blank">${s.website}</a>`);
-    markers.push(m);
-    L.circle(s.coords,{radius:50000,color:'#F45B1A',fillColor:'#F45B1A',fillOpacity:.05,weight:1}).addTo(map);
-  });
-  try{const b=L.featureGroup(markers).getBounds();if(b.isValid())map.fitBounds(b.pad(0.1))}catch(e){}
-}
-
-function renderCatGrid(){
-  const grid=document.getElementById('cat-grid');if(!grid)return;
-  grid.innerHTML=CATEGORIES.map(c=>`<a href="#/${c.id}" class="cat-card"><span class="cat-card-icon">${c.icon}</span><span class="cat-card-label">${c.name}</span><span class="cat-card-count">${SUPPLIERS.filter(s=>s.cats.includes(c.id)||(c.id==='aggregates'&&s.cats.includes('aggregates'))).length} suppliers</span></a>`).join('');
-}
-
-const RM={'':'home','/':'home',search:'search',rental:'rental','site-services':'site-services',freight:'freight',irrigation:'irrigation',erosion:'erosion','fuel-lubricants':'fuel-lubricants',fencing:'fencing',dumpsters:'dumpsters','fuel-tanks':'fuel-tanks',projects:'projects',dashboard:'dashboard',suppliers:'suppliers',messages:'messages','supplier-portal':'supplier-portal'};
-
-function showPage(pid){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  const t=document.getElementById(pid);if(t)t.classList.add('active');
-  const cat=CATEGORIES.find(c=>c.id===pid);
-  if(cat)renderCategoryPage(cat);
-  if(pid==='home'){renderCatGrid();initMap();updateUI()}
-  if(pid==='projects')renderProjectsPage();
-  if(pid==='dashboard')renderDashboard();
-  if(pid==='suppliers')renderSuppliersPage();
-  if(pid==='messages')renderMessages();
-  if(pid==='supplier-portal')renderSupplierPortal();
-  document.querySelectorAll('[data-route]').forEach(a=>a.classList.toggle('active',a.dataset.route==='/'+pid||(pid==='home'&&a.dataset.route==='https://hermes-agent.nousresearch.com/')));
-  window.scrollTo(0,0);
-}
-
-function handleHashChange(){const h=location.hash||'#/',r=h.replace('#','').split('https://hermes-agent.nousresearch.com/')[1]||'';showPage(RM[r]||'home')}
-window.addEventListener('hashchange',handleHashChange);
-window.addEventListener('load',()=>{handleHashChange();initMap()});
-
-function toggleCurrency(cur){S.currency=cur;document.querySelectorAll('.cur-toggle button').forEach(b=>b.classList.toggle('active',b.dataset.cur===cur));updateUI()}
-function toggleRole(){S.role=S.role==='buyer'?'supplier':'buyer';const ind=document.getElementById('role-indicator');ind.textContent=S.role==='buyer'?'Buyer':'Supplier';ind.className='role-badge '+(S.role==='buyer'?'role-buyer':'role-supplier');document.querySelector('.nav-cta').textContent=S.role==='buyer'?'Switch to Supplier':'Switch to Buyer';if(S.role==='supplier')location.hash='#/supplier-portal';else location.hash='#/'}
-
-function updateUI(){
-  const el=document.getElementById('hero-saved');if(el)el.textContent=S.savedQuotes.length;
-  const el2=document.getElementById('hero-suppliers');if(el2)el2.textContent=SUPPLIERS.length;
-  if(document.getElementById('dashboard')?.classList.contains('active'))renderDashboard();
-  if(document.getElementById('projects')?.classList.contains('active'))renderProjectsPage();
-}
-</script>
-</body>
-</html>
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•(¼¼MQ=IƒŠP•¹ÑÉ…±¥é•ÍÑ…Ñ”µ…¹…•µ•¹Ğ(¼¼ƒŠVCŠVCŠVCŠVCŠVCŠVCŠVCŠVCŠVCŠVCŠVCŠVCŠVCŠVCŠVCŠVCŠVCŠVCŠVCŠVCŠVCŠVCŠVCŠVCŠVCŠVCŠVCŠVCŠVCŠVCŠVCŠVCŠVCŠVCŠVCŠVCŠVCŠVCŠVCŠVCŠVCŠVCŠVCŠVCŠVCŠVCŠVCŠVCŠVCŠVCŠVCŠVCŠVCŠVCŠVCŠVCŠVCŠVCŠVCŠVCŠVCŠVCŠVCŠVCŠVCŠVCŠVCŠVCŠV@¦6öç7B7F÷&T6öçFW‡BÒ7&VFT6öçFW‡B‚“° ¦6öç7B–æ—F–Å7FFRÒ°¢7W'&Væ7“¢t4BrÀ¢&FS¢ã3rÀ¢&öÆS¢v'W–W"rÀ¢&÷WFS¢v†öÖRrÀ¢6fVEV÷FW3¢µÒÀ¢&ö¦V7G3¢µÒÀ¢ÖW76vW3¢µÒÀ¢6VÆV7FVE7WÆ–W#¢çVÆÂÀ§Ó° ¦gVæ7F–öâ&VGV6W"‡7FFRÂ7F–öâ’°¢7v—F6‚†7F–öâçG—R’°¢66Rtäd”tDRs¢&WGW&â²ââç7FFRÂ&÷WFS¢7F–öâç&÷WFRÂ6VÆV7FVE7WÆ–W#¢çVÆÇÓ°¢66Ru4UEô5U%$Tä5’s¢&WGW&â²ââç7FFRÂ7W'&Væ7“¢7F–öâæ7W'&Væ7—Ó°¢66RuDôttÄUõ$ôÄRs¢&WGW&â²ââç7FFRÂ&öÆS¢7FFRç&öÆSÓÓÒv'W–W"sòw7WÆ–W"s¢v'W–W"wÓ°¢66Ru4dUõTõDRs¢°¢6öç7B–G‚Ò7FFRç6fVEV÷FW2æf–æD–æFW‚‡Óçæ–CÓÓÖ7F–öâçV÷FRæ–B“°¢–b†–GƒãÓ’&WGW&â²ââç7FFRÂ6fVEV÷FW3¢7FFRç6fVEV÷FW2æf–ÇFW"‚…òÆ’“Óæ’ÓÖ–G‚—Ó°¢&WGW&â²ââç7FFRÂ6fVEV÷FW3¢²ââç7FFRç6fVEV÷FW2Â²ââæ7F–öâçV÷FRÂ6fVDC¢æWrFFR‚’çFô•4õ7G&–ær‚—Õ×Ó°¢Ğ¢66RtDEõDõõ$ô¤T5Bs¢°¢6öç7B&ö¦V7G2Ò²ââç7FFRç&ö¦V7G5Ó°¢ÆWB&ö¢Ò&ö¦V7G2æf–æB‡ÓçææÖSÓÓÖ7F–öâç&ö¦V7DæÖR“°¢–b‚&ö¢’²&ö¢Ò¶æÖS¦7F–öâç&ö¦V7DæÖRÂV÷FW3¥µÒÂ7&VFVC¢æWrFFR‚’çFô•4õ7G&–ær‚—Ó²&ö¦V7G2çW6‚‡&ö¢“²Ğ¢–b‚&ö¢çV÷FW2æf–æB‡Óçæ–CÓÓÖ7F–öâçV÷FRæ–B’’&ö¢çV÷FW2çW6‚‡²ââæ7F–öâçV÷FWÒ“°¢&WGW&â²ââç7FFRÂ&ö¦V7G7Ó°¢Ğ¢66RtDTÄUDUõ$ô¤T5Bs¢&WGW&â²ââç7FFRÂ&ö¦V7G3¢7FFRç&ö¦V7G2æf–ÇFW"‡ÓçææÖRÓÖ7F–öâææÖR—Ó°¢66Ru4TäEôÔU54tRs¢&WGW&â²ââç7FFRÂÖW76vW3¢²ââç7FFRæÖW76vW2Â7F–öâæÖW76vU×Ó°¢66Ru4TÄT5Eõ5UÄ”U"s¢&WGW&â²ââç7FFRÂ6VÆV7FVE7WÆ–W#¢7F–öâç7WÆ–W'Ó°¢FVfVÇC¢&WGW&â7FFS°¢Ğ§Ğ ¢òò)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y ¢òòDD(	B&VÂöçF&–ò7WÆ–W'0¢òò)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y)Y ¦6öç7B5UÄ”U%2Ò°¢¶–C¢u3rÆæÖS¢tGVffW&–âvw&VvFW2rÆ6—G“¢uF÷&öçFòÂôârÆ6ö÷&G3¥³C2ãsÂÓs’ãC%ÒÆ6÷VçG'“¢t4rÆ6G3¥²vvw&VvFW2uÒÇ&F–æs£BãrÆc¢tDrÇ6—FS¢vGVffW&–ævw&VvFW2æ6öÒrÇ†öæS¢rƒCb’SÓ#wÒÀ¢¶–C¢u3"rÆæÖS¢tÖ–ÆÆW"w&÷WrÆ6—G“¢tÖ&¶†ÒÂôârÆ6ö÷&G3¥³C2ãƒbÂÓs’ã3EÒÆ6÷VçG'“¢t4rÆ6G3¥²vvw&VvFW2rÂvg&V–v‡BuÒÇ&F–æs£BãRÆc¢tÔrrÇ6—FS¢vÖ–ÆÆW&w&÷Wæ6rÇ†öæS¢rƒ“R’CsRÓcccwÒÀ¢¶–C¢u32rÆæÖS¢u7G&Fvw&VvFW2rÆ6—G“¢ufVv†âÂôârÆ6ö÷&G3¥³C2ãƒ"ÂÓs’ãSÒÆ6÷VçG'“¢t4rÆ6G3¥²vvw&VvFW2rÂvW&÷6–öâuÒÇ&F–æs£BãbÆc¢u4rÇ6—FS¢w7G&Fw'æ6öÒrÇ†öæS¢rƒCb’sCrÓ3cwÒÀ¢¶–C¢u3BrÆæÖS¢t'&ö6²vw&VvFW2rÆ6—G“¢uv†—F'’ÂôârÆ6ö÷&G3¥³C2ãƒ‚ÂÓs‚ã“UÒÆ6÷VçG'“¢t4rÆ6G3¥²vvw&VvFW2uÒÇ&F–æs£BãBÆc¢t$rÇ6—FS¢v'&ö6¶vw&VvFW2æ6öÒrÇ†öæS¢rƒ“R’ccRÓCCwÒÀ¢¶–C¢u3RrÆæÖS¢t&GFÆVf–VÆBWV—ÖVçBrÆ6—G“¢t&'&–RÂôârÆ6ö÷&G3¥³CBã3’ÂÓs’ãc•ÒÆ6÷VçG'“¢t4rÆ6G3¥²w&VçFÂuÒÇ&F–æs£Bã‚Æc¢t$RrÇ6—FS¢v&GFÆVf–VÆFWV—ÖVçBæ6rÇ†öæS¢rƒƒ’#c2ÓCSRwÒÀ¢¶–C¢u3brÆæÖS¢täÒ&VçFÇ2rÆ6—G“¢tÆöæFöâÂôârÆ6ö÷&G3¥³C"ã“‚ÂÓƒã#UÒÆ6÷VçG'“¢t4rÆ6G3¥²w&VçFÂrÂvg&V–v‡BuÒÇ&F–æs£BãbÆc¢tå"rÇ6—FS¢væ×&VçFÇ2æ6öÒrÇ†öæS¢rƒS’’cS’Ó3RwÒÀ¢¶–C¢u3rrÆæÖS¢t6ÆVä6ò6W'f–6W2rÆ6—G“¢tÖ—76—76VvÂôârÆ6ö÷&G3¥³C2ãS’ÂÓs’ãcEÒÆ6÷VçG'“¢t4rÆ6G3¥²w6—FR×6W'f–6W2rÂvfVæ6–ærrÂvGV×7FW'2uÒÇ&F–æs£BãRÆc¢t42rÇ6—FS¢v6ÆVæ6òæ6rÇ†öæS¢rƒ“R’csÓwÒÀ¢¶–C¢u3‚rÆæÖS¢tw&VVäfÆ÷r—'&–vF–öârÆ6—G“¢twVVÇ‚ÂôârÆ6ö÷&G3¥³C2ãSRÂÓƒã#UÒÆ6÷VçG'“¢t4rÆ6G3¥²v—'&–vF–öârÂvW&÷6–öâuÒÇ&F–æs£BãBÆc¢ttbrÇ6—FS¢vw&VVæfÆ÷ræ6rÇ†öæS¢rƒS’’ƒ3bÓ##wÒÀ¢¶–C¢u3’rÆæÖS¢tgVVÄW‡&W72öçF&–òrÆ6—G“¢t†Ö–ÇFöâÂôârÆ6ö÷&G3¥³C2ã#bÂÓs’ãƒuÒÆ6÷VçG'“¢t4rÆ6G3¥²vgVVÂÖÇV'&–6çG2rÂvgVVÂ×Fæ·2uÒÇ&F–æs£Bã2Æc¢tdRrÇ6—FS¢vgVVÆW‡&W72æ6rÇ†öæS¢rƒ“R’SC’Ó33wÒÀ¢¶–C¢u3rÆæÖS¢tæ÷'F†W&äg&V–v‡BrÆ6—G“¢u7VF'W'’ÂôârÆ6ö÷&G3¥³CbãC’ÂÓƒãÒÆ6÷VçG'“¢t4rÆ6G3¥²vg&V–v‡BuÒÇ&F–æs£Bã"Æc¢täbrÇ6—FS¢væ÷'F†W&æg&V–v‡Bæ6rÇ†öæS¢rrÀ¢ÒÀ¢¶–C¢u3rÆæÖS¢tÖ–6†–vâvw&VvFW2rÆ6—G“¢tFWG&ö—BÂÔ’rÆ6ö÷&G3¥³C"ã32ÂÓƒ2ãUÒÆ6÷VçG'“¢uU2rÆ6G3¥²vvw&VvFW2rÂvg&V–v‡BuÒÇ&F–æs£BãRÆc¢tÔrÇ6—FS¢vÖ–6†–vævræ6öÒrÇ†öæS¢rƒ32’ƒsrÓSSwÒÀ¢¶–C¢u3"rÆæÖS¢t'VffÆòWV—ÖVçBrÆ6—G“¢t'VffÆòÂå’rÆ6ö÷&G3¥³C"ãƒ’ÂÓs‚ãƒ…ÒÆ6÷VçG'“¢uU2rÆ6G3¥²w&VçFÂuÒÇ&F–æs£BãBÆc¢t$brÇ6—FS¢v'VffÆöWV—æ6öÒrÇ†öæS¢rƒsb’ƒC"ÓccwÒÀ¥Ó° ¦6öç7B4DTtõ$”U2Ò°¢¶–C¢vvw&VvFW2rÆæÖS¢tvw&VvFW2rÆ–6öã¢w7FöæRrÆFW63¢u7FöæRÂ6æBÂw&fVÂÂÆ–ÖW7FöæR(	B&VÂöçF&–ò&–6–ærrÆf–VÆG3¥°¢¶–C¢vÖFW&–ÂrÆÆ&VÃ¢tÖFW&–ÂrÇG—S¢w6VÆV7BrÆ÷G3¥²s2óB"6ÆV"7FöæRrÂtw&çVÆ"rÂtw&çVÆ""rÂu6æBrÂtw&fVÂrÂu67&VVæ–æw2u×ÒÀ¢¶–C¢wG’rÆÆ&VÃ¢uVçF—G’‡FöææW2’rÇG—S¢vçVÖ&W"rÆÖ–ã£ÇfÃ£ÒÀ¢¶–C¢vFFRrÆÆ&VÃ¢tFFR&WV—&VBrÇG—S¢vFFRwÒÇ¶–C¢v6—G’rÆÆ&VÃ¢t6—G’rÇG—S¢wFW‡BrÇƒ¢vRærâÂF÷&öçFòwÒÇ¶–C¢w&÷brÆÆ&VÃ¢u&÷f–æ6Rõ7FFRrÇG—S¢wFW‡BrÇƒ¢vRærâÂôâwÕ×ÒÀ¢¶–C¢w&VçFÂrÆæÖS¢tWV—ÖVçB&VçFÂrÀÚ¾öã¢y¯Ùøš‰Ë/Úkó¥ÂtW†6fF÷'2Â6³¯Ù¿-{ers, naÎòsËšY[‚¼Î–ÂˆÚY‰Ù\]Z\	ËX™[‰Ñ\Æ¼\Y[	Ë\N‰ÜÙ[Xİ	ËÜÎ–ÉÓZ[šH^Ø]˜^ˆŠËM]
+IË	ÓZY^®ò]˜sÜˆ
+LM]
+IË	ÔÚÚYİY\‰Ë	ÕÚY[Ùùó\‰Ë	ĞÛÛ\XİÜ‰×_KˆÚY‰Ü\š[Ù	ËX™[‰Ô\š[Ù	Ë\N‰ÜÙ[Xİ	ËÜÎ–ÉÑ^IË	ÕÙYZÉË	Ó[Û	×_KÚY‰Ù\‰ËX™[‰Ñ\˜][Û‰Ë\N‰Û[X™\‰ËZ[ŒK˜[Œ_KˆÚY‰ØÚ]IËX™[‰ĞÚ]IË\N‰İ^	Ë‰ÙK™Ë‹Ü›ÛÉßKÚY‰Ü›İ‰ËX™[‰Ô›İš[˜ÙKÔİ]IË\N‰İ^	Ë‰ÙK™Ë‹Ó‰ßW_KˆÚY‰Ùœ™ZYÚ	Ë˜[YN‰Ñœ™ZYÚ	ˆ][[™ÉËXÛÛ‰İXÚÉË\ØÎ‰ÓX]\šX[[™\]Z\Y[˜[œÜÜ	ËšY[Î–ÂˆÚY‰ÛØY	ËX™[‰ÓØY	Ë\N‰ÜÙ[Xİ	ËÜÎ–ÉĞYÙÜ™YØ]\ÉË	Ñ\]Z\Y[	Ë	ÓZ^Y	×_KˆÚYÎ‰İÙZYÚ	§;X™[‰ÕÙZYÚ
+
+IË\N‰Û[X™\‰ËZ[ŒK˜[ŒŒKˆÚYÎ‰ÜXÚİ\	¿X™[‰ÔXÚİ\	Ï\N‰İ^	Ë‰ÙK™Ë‹˜\œšYKÓ‰ßKÚYÎ‰Ù›Ü	ËX™[‰Ñ[]™\IË\N‰İ^	Ë‰ÙK™Ë‹Ü›ÛËÓ‰ßKˆÚYÎ‰İ™ZXÛIË€XÙ[‰Õ™ZXÛIËG—S¢w6VÆV7BrÆ÷G3¥²tGV×G'V6²rÂtfÆF&VBrÂtÆ÷v&÷’u×ÒÇ¶–s¢vFFRrÆÆ&VÃ¢tFFRrÇG—S¢vFFRwÕ×ÒÀ¢¶–s¢w6—FR×6W'f–6W2rÆæÖS¢u6—FR6W'f–6W2rÆ–6öã¢v'V–ÆF–ærrÆFW63¢uFö–ÆWG2ÂfVæ6–ærÂv7FRrÆf–VÆG3¥°¢¶–C¢w7f2rÆÆ&VÃ¢u6W'f–6RrÇG—S¢w6VÆV7BrÆ÷G3¥²u÷'F&ÆRFö–ÆWBrÂuFV×fVæ6–ærrÂtGV×7FW"rÂu&öÆÂÖöfb&–âu×ÒÀ¢¶–s¢wG’p
