@@ -1,67 +1,305 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SiteSupply — Compare Construction Supply Quotes</title>
-  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SiteSupply — Construction Supply, Instantly Compared</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy:        #0F1D3D;
+  --navy-light:  #1A3366;
+  --orange:      #F45B1A;
+  --orange-light:#FFF0E8;
+  --emerald:     #0D8C5E;
+  --emerald-light:#E8F5EF;
+  --white:       #FFFFFF;
+  --gray-50:     #F8F9FB;
+  --gray-100:    #F0F2F5;
+  --gray-200:    #E2E5EA;
+  --gray-300:    #CDD2D9;
+  --gray-400:    #959DA8;
+  --gray-500:    #6B7480;
+  --gray-600:    #4A5159;
+  --gray-700:    #2D3339;
+  --gray-800:    #1A1E23;
+  --gray-900:    #0D1114;
+  --red:         #DC2626;
+  --amber:       #F59E0B;
+  --shadow-sm:   0 1px 2px rgba(0,0,0,.04);
+  --shadow:      0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+  --shadow-md:   0 4px 12px rgba(0,0,0,.06), 0 1px 3px rgba(0,0,0,.04);
+  --shadow-lg:   0 12px 32px rgba(0,0,0,.08), 0 2px 6px rgba(0,0,0,.04);
+  --shadow-xl:   0 20px 48px rgba(0,0,0,.1), 0 4px 12px rgba(0,0,0,.04);
+  --radius:      10px;
+  --radius-lg:   14px;
+  --radius-xl:   20px;
+  --radius-pill: 9999px;
+  --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px;-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--gray-50);color:var(--gray-700);line-height:1.6;min-height:100vh;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+.topnav{background:rgba(255,255,255,.85);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--gray-200);position:sticky;top:0;z-index:100;padding:0 1.5rem}
+.topnav-inner{max-width:1280px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:56px}
+.nav-brand{font-weight:800;font-size:1.125rem;color:var(--gray-900);text-decoration:none;letter-spacing:-0.02em;display:flex;align-items:center;gap:8px}
+.nav-brand-dot{width:8px;height:8px;border-radius:50%;background:var(--orange)}
+.nav-links{display:flex;align-items:center;gap:.25rem}
+.nav-links a{padding:.4rem .75rem;border-radius:var(--radius);font-size:.8125rem;font-weight:500;color:var(--gray-500);text-decoration:none;transition:all .15s;letter-spacing:-0.01em}
+.nav-links a:hover{background:var(--gray-100);color:var(--gray-800)}
+.nav-links a.active{background:var(--gray-100);color:var(--gray-900);font-weight:600}
+.nav-cta{background:var(--orange);color:var(--white);border:none;padding:.45rem 1.125rem;border-radius:var(--radius-pill);font-family:var(--font);font-size:.8125rem;font-weight:600;cursor:pointer;transition:all .15s;letter-spacing:-0.01em}
+.nav-cta:hover{background:#E0480F;transform:translateY(-1px);box-shadow:var(--shadow-md)}
+.page-container{max-width:1280px;margin:0 auto;padding:0 1.5rem}
+.hero{padding:4rem 0 3rem;text-align:center;background:linear-gradient(180deg,var(--white) 0%,var(--gray-50) 100%)}
+.hero-badge{display:inline-block;background:var(--orange-light);color:var(--orange);padding:.25rem .75rem;border-radius:var(--radius-pill);font-size:.6875rem;font-weight:600;letter-spacing:.03em;text-transform:uppercase;margin-bottom:1.25rem}
+.hero h1{font-size:clamp(2rem,5vw,3.5rem);font-weight:800;color:var(--gray-900);line-height:1.1;letter-spacing:-0.04em;margin-bottom:1rem}
+.hero h1 span{color:var(--orange)}
+.hero p{font-size:1.125rem;color:var(--gray-500);max-width:600px;margin:0 auto 2rem;line-height:1.6}
+.hero-stats{display:flex;justify-content:center;gap:3rem;margin-top:1.5rem;flex-wrap:wrap}
+.hero-stat{text-align:center}
+.hero-stat-value{font-size:2rem;font-weight:800;color:var(--gray-900);letter-spacing:-0.03em;line-height:1.1}
+.hero-stat-label{font-size:.6875rem;color:var(--gray-400);font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-top:.25rem}
+.section{padding:3rem 0}
+.section-header{text-align:center;margin-bottom:2rem}
+.section-header h2{font-size:1.75rem;font-weight:700;color:var(--gray-900);letter-spacing:-0.03em;margin-bottom:.5rem}
+.section-header p{font-size:.9375rem;color:var(--gray-500);max-width:500px;margin:0 auto}
+.cat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:.75rem}
+.cat-card{background:var(--white);border-radius:var(--radius-lg);padding:1.5rem 1rem;text-align:center;cursor:pointer;transition:all .25s ease;box-shadow:var(--shadow-sm);border:1px solid transparent;text-decoration:none;color:inherit;display:block}
+.cat-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg);border-color:var(--gray-200)}
+.cat-card-icon{font-size:2.25rem;margin-bottom:.75rem;display:block}
+.cat-card-label{font-size:.8125rem;font-weight:600;color:var(--gray-700);letter-spacing:-0.01em}
+.cat-card-count{font-size:.6875rem;color:var(--gray-400);margin-top:.25rem;font-weight:500}
+.page{display:none}
+.page.active{display:block;animation:fadeIn .3s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.form-page-header{padding:2rem 0 1.5rem;text-align:center;background:var(--white);border-bottom:1px solid var(--gray-100);margin-bottom:2rem}
+.form-page-header h1{font-size:1.75rem;font-weight:700;color:var(--gray-900);letter-spacing:-0.03em}
+.form-page-header p{color:var(--gray-500);font-size:.9375rem;margin-top:.25rem}
+.form-card{background:var(--white);border-radius:var(--radius-xl);box-shadow:var(--shadow);padding:1.75rem;margin-bottom:1.5rem;border:1px solid var(--gray-100)}
+.form-grid{display:grid;grid-template-columns:1fr;gap:1rem}
+@media(min-width:640px){.form-grid{grid-template-columns:1fr 1fr}.form-grid .full-width{grid-column:1/-1}}
+label{display:block;font-size:.75rem;font-weight:600;color:var(--gray-600);margin-bottom:.3rem}
+input,select{width:100%;padding:.55rem .75rem;border:1.5px solid var(--gray-200);border-radius:var(--radius);font-family:var(--font);font-size:.875rem;color:var(--gray-800);background:var(--gray-50);transition:all .15s}
+input:focus,select:focus{outline:none;background:var(--white);border-color:var(--navy-light);box-shadow:0 0 0 3px rgba(15,29,61,.08)}
+.btn{display:inline-flex;align-items:center;gap:.4rem;justify-content:center;padding:.55rem 1.25rem;border:none;border-radius:var(--radius);font-family:var(--font);font-size:.8125rem;font-weight:600;cursor:pointer;transition:all .15s;text-decoration:none;letter-spacing:-0.01em}
+.btn-primary{background:var(--navy);color:var(--white)}
+.btn-primary:hover{background:var(--navy-light);transform:translateY(-1px);box-shadow:var(--shadow-md)}
+.btn-orange{background:var(--orange);color:var(--white);border-radius:var(--radius-pill);padding:.6rem 1.5rem}
+.btn-orange:hover{background:#E0480F;box-shadow:var(--shadow-md)}
+.btn-emerald{background:var(--emerald);color:var(--white)}
+.btn-emerald:hover{background:#0B7A4F}
+.btn-outline{background:transparent;border:1.5px solid var(--gray-200);color:var(--gray-600)}
+.btn-outline:hover{border-color:var(--gray-400);background:var(--gray-50)}
+.btn-ghost{background:transparent;color:var(--gray-500)}
+.btn-ghost:hover{color:var(--gray-800);background:var(--gray-100)}
+.btn-sm{padding:.35rem .75rem;font-size:.75rem}
+.btn-lg{padding:.7rem 1.75rem;font-size:.9375rem}
+.btn-block{width:100%}
+.quote-card{background:var(--white);border-radius:var(--radius-lg);box-shadow:var(--shadow);padding:1.25rem;margin-bottom:.75rem;transition:all .2s ease;border:1px solid var(--gray-100);animation:fadeIn .3s ease}
+.quote-card:hover{border-color:var(--gray-200);box-shadow:var(--shadow-lg)}
+.quote-card .q-supplier{font-weight:700;color:var(--gray-900);font-size:.9375rem;letter-spacing:-0.01em}
+.quote-card .q-loc{font-size:.75rem;color:var(--gray-400);margin-top:1px}
+.quote-card .q-price{font-size:1.5rem;font-weight:800;color:var(--gray-900);letter-spacing:-0.03em}
+.quote-card .q-currency{font-size:.6875rem;font-weight:500;color:var(--gray-400);text-transform:uppercase;letter-spacing:.04em}
+.quote-card .q-meta{display:flex;flex-wrap:wrap;gap:.75rem;font-size:.75rem;color:var(--gray-500);margin-top:.5rem}
+.q-distance{display:inline-flex;align-items:center;gap:4px;background:var(--gray-50);color:var(--gray-600);padding:.15rem .55rem;border-radius:var(--radius-pill);font-size:.6875rem;font-weight:600}
+.q-rating{color:var(--amber);font-size:.8125rem;letter-spacing:-0.04em}
+.q-actions{display:flex;gap:.5rem;margin-top:.75rem}
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin:1.5rem 0}
+@media(max-width:768px){.stats-row{grid-template-columns:repeat(2,1fr)}}
+.stat-item{background:var(--white);border-radius:var(--radius-lg);padding:1.25rem;text-align:center;box-shadow:var(--shadow);border:1px solid var(--gray-100)}
+.stat-item-value{font-size:1.75rem;font-weight:800;color:var(--gray-900);letter-spacing:-0.03em}
+.stat-item-label{font-size:.6875rem;color:var(--gray-400);font-weight:600;text-transform:uppercase;letter-spacing:.05em;margin-top:.25rem}
+.data-table{width:100%;border-collapse:collapse;font-size:.8125rem}
+.data-table th{text-align:left;padding:.625rem .75rem;background:var(--gray-50);color:var(--gray-400);font-weight:600;font-size:.6875rem;text-transform:uppercase;letter-spacing:.05em;border-bottom:2px solid var(--gray-100)}
+.data-table td{padding:.625rem .75rem;border-bottom:1px solid var(--gray-50);color:var(--gray-600)}
+.data-table tr:hover td{background:var(--gray-50)}
+.badge{display:inline-block;padding:.15rem .55rem;border-radius:var(--radius-pill);font-size:.6875rem;font-weight:600;letter-spacing:.01em}
+.badge-outline{background:transparent;border:1px solid var(--gray-200);color:var(--gray-500)}
+.badge-green{background:var(--emerald-light);color:var(--emerald)}
+.badge-amber{background:#FFF7ED;color:#C2410C}
+.badge-gray{background:var(--gray-100);color:var(--gray-500)}
+.sup-card{display:flex;gap:1rem;align-items:center;background:var(--white);border-radius:var(--radius-lg);padding:1rem 1.25rem;margin-bottom:.5rem;box-shadow:var(--shadow-sm);border:1px solid var(--gray-100);transition:all .15s}
+.sup-card:hover{border-color:var(--gray-200);box-shadow:var(--shadow)}
+.sup-avatar{width:48px;height:48px;border-radius:50%;background:var(--navy);color:var(--white);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1rem;flex-shrink:0;letter-spacing:-0.02em}
+.sup-info{flex:1;min-width:0}
+.sup-name{font-weight:600;color:var(--gray-800);font-size:.875rem}
+.sup-cats{margin-top:2px}
+.sup-meta{font-size:.75rem;color:var(--gray-400);margin-top:2px}
+.empty{text-align:center;padding:4rem 1rem}
+.empty-icon{font-size:3rem;margin-bottom:.75rem;opacity:.3}
+.empty p{color:var(--gray-400);font-size:.8125rem;margin-bottom:1rem}
+.util-bar{display:flex;align-items:center;gap:.75rem;margin-bottom:1.5rem;justify-content:flex-end}
+.util-bar span.label{font-size:.75rem;color:var(--gray-400);font-weight:500}
+.cur-toggle{display:flex;background:var(--gray-100);border-radius:var(--radius);padding:2px}
+.cur-toggle button{background:transparent;color:var(--gray-500);border:none;padding:.3rem .65rem;border-radius:var(--radius);font-family:var(--font);font-size:.6875rem;font-weight:600;cursor:pointer;transition:all .15s}
+.cur-toggle button.active{background:var(--white);color:var(--gray-900);box-shadow:var(--shadow-sm)}
+.site-footer{border-top:1px solid var(--gray-200);padding:2rem 1.5rem;text-align:center;color:var(--gray-400);font-size:.75rem;margin-top:3rem}
+.mobile-bottomnav{display:none;position:fixed;bottom:0;left:0;right:0;z-index:99;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);border-top:1px solid var(--gray-200);padding:.25rem 0;justify-content:space-around}
+.mobile-bottomnav a{display:flex;flex-direction:column;align-items:center;gap:2px;padding:.35rem .5rem;color:var(--gray-400);text-decoration:none;font-size:.5625rem;font-weight:500;min-width:56px}
+.mobile-bottomnav a.active{color:var(--gray-900)}
+.mobile-bottomnav a svg{width:18px;height:18px}
+@media(max-width:768px){.hero{padding:2.5rem 0 2rem}.nav-links{display:none}.mobile-bottomnav{display:flex}.page-container{padding:0 1rem}.site-footer{margin-bottom:60px}}
+</style>
 </head>
 <body>
-
-<!-- ═══ App Shell ═══ -->
-<div id="app">
-
-  <!-- Desktop Sidebar -->
-  <aside class="sidebar">
-    <div class="sidebar-brand">
-      <span class="brand-dot"></span> SiteSupply
-    </div>
-    <nav class="sidebar-nav">
-      <a href="#/" class="nav-link" data-route="/">Home</a>
-      <a href="#/search" class="nav-link" data-route="/search">Search Quotes</a>
-      <a href="#/quotes" class="nav-link" data-route="/quotes">My Quotes</a>
-      <a href="#/dashboard" class="nav-link" data-route="/dashboard">Dashboard</a>
-      <a href="#/suppliers" class="nav-link" data-route="/suppliers">Suppliers</a>
-      <a href="#/about" class="nav-link" data-route="/about">About</a>
-    </nav>
-    <div class="sidebar-footer">
-      <button class="btn-outline" onclick="location.hash='#/login'">Sign In</button>
-    </div>
-  </aside>
-
-  <!-- Mobile Top Bar -->
-  <header class="mobile-topbar">
-    <a href="#/" class="mobile-brand"><span class="brand-dot"></span> SiteSupply</a>
-    <button class="mobile-menu-btn" onclick="toggleMobileNav()">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-    </button>
-  </header>
-
-  <!-- Mobile Slide-Down Nav -->
-  <div id="mobileNav" class="mobile-nav">
-    <a href="#/" class="nav-link" data-route="/">Home</a>
-    <a href="#/search" class="nav-link" data-route="/search">Search Quotes</a>
-    <a href="#/quotes" class="nav-link" data-route="/quotes">My Quotes</a>
-    <a href="#/dashboard" class="nav-link" data-route="/dashboard">Dashboard</a>
-    <a href="#/suppliers" class="nav-link" data-route="/suppliers">Suppliers</a>
-    <a href="#/about" class="nav-link" data-route="/about">About</a>
-  </div>
-
-  <!-- Main Content -->
-  <main class="content" id="content">
-    <!-- Router injects pages here -->
-  </main>
-
-  <!-- Mobile Bottom Nav -->
-  <nav class="mobile-bottomnav">
-    <a href="#/" class="bn-link" data-route="/"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg><span>Home</span></a>
-    <a href="#/search" class="bn-link" data-route="/search"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><span>Search</span></a>
-    <a href="#/quotes" class="bn-link" data-route="/quotes"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span>Quotes</span></a>
-    <a href="#/dashboard" class="bn-link" data-route="/dashboard"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg><span>Dashboard</span></a>
-  </nav>
+<nav class="topnav"><div class="topnav-inner"><a href="#/" class="nav-brand"><span class="nav-brand-dot"></span>SiteSupply</a><div class="nav-links"><a href="#/" data-route="/" class="active">Home</a><a href="#/search" data-route="/search">Aggregates</a><a href="#/rental" data-route="/rental">Rental</a><a href="#/freight" data-route="/freight">Freight</a><a href="#/site-services" data-route="/site-services">Services</a><a href="#/suppliers" data-route="/suppliers">Suppliers</a><a href="#/dashboard" data-route="/dashboard">Dashboard</a></div><button class="nav-cta" onclick="location.hash='#/search'">Get Quotes</button></div></nav>
+<div id="app-content">
+<div id="home" class="page active">
+<section class="hero"><div class="page-container"><div class="hero-badge">North America's Construction Marketplace</div><h1>Construction supply,<br><span>instantly compared.</span></h1><p>Compare quotes from 20 suppliers across 10 categories. Know the nearest, cheapest, highest-rated supplier — in seconds.</p><a href="#/search" class="btn btn-orange btn-lg">Search Quotes →</a><div class="hero-stats"><div class="hero-stat"><div class="hero-stat-value">20</div><div class="hero-stat-label">Suppliers</div></div><div class="hero-stat"><div class="hero-stat-value">10</div><div class="hero-stat-label">Categories</div></div><div class="hero-stat"><div class="hero-stat-value">US+CA</div><div class="hero-stat-label">Countries</div></div><div class="hero-stat"><div class="hero-stat-value" id="hero-saved">0</div><div class="hero-stat-label">Saved Quotes</div></div></div></div></section>
+<section class="section"><div class="page-container"><div class="section-header"><h2>What do you need?</h2><p>Select a category to get started with instant quote comparison.</p></div>
+<div class="cat-grid">
+<a href="#/search" class="cat-card"><span class="cat-card-icon">🪨</span><span class="cat-card-label">Aggregates</span><span class="cat-card-count">5 suppliers</span></a>
+<a href="#/rental" class="cat-card"><span class="cat-card-icon">🚜</span><span class="cat-card-label">Equipment Rental</span><span class="cat-card-count">3 suppliers</span></a>
+<a href="#/site-services" class="cat-card"><span class="cat-card-icon">🚻</span><span class="cat-card-label">Site Services</span><span class="cat-card-count">2 suppliers</span></a>
+<a href="#/freight" class="cat-card"><span class="cat-card-icon">🚛</span><span class="cat-card-label">Freight &amp; Hauling</span><span class="cat-card-count">4 suppliers</span></a>
+<a href="#/irrigation" class="cat-card"><span class="cat-card-icon">💧</span><span class="cat-card-label">Irrigation</span><span class="cat-card-count">2 suppliers</span></a>
+<a href="#/erosion" class="cat-card"><span class="cat-card-icon">🌿</span><span class="cat-card-label">Erosion Control</span><span class="cat-card-count">3 suppliers</span></a>
+<a href="#/fuel-lubricants" class="cat-card"><span class="cat-card-icon">⛽</span><span class="cat-card-label">Fuel &amp; Lubes</span><span class="cat-card-count">1 supplier</span></a>
+<a href="#/fencing" class="cat-card"><span class="cat-card-icon">🟗️</span><span class="cat-card-label">Fencing</span><span class="cat-card-count">3 suppliers</span></a>
+<a href="#/dumpsters" class="cat-card"><span class="cat-card-icon">🗑️</span><span class="cat-card-label">Dumpsters</span><span class="cat-card-count">2 suppliers</span></a>
+<a href="#/fuel-tanks" class="cat-card"><span class="cat-card-icon">🛢️</span><span class="cat-card-label">Fuel Tanks</span><span class="cat-card-count">2 suppliers</span></a>
+</div></div></section>
 </div>
+<div id="search" class="page">
+<div class="form-page-header"><h1>Aggregates</h1><p>Stone, sand, gravel — compare prices and delivery times.</p></div>
+<div class="page-container"><div class="form-card"><form id="quote-search-form" class="form-grid">
+<div><label>Material</label><select id="material-type" required><option value="sand">Sand</option><option value="stone">Stone</option><option value="gravel">Gravel</option><option value="aggregate">Aggregate</option></select></div>
+<div><label>Date Required</label><input type="date" id="date-required" required></div>
+<div><label>City</label><input type="text" id="city" placeholder="e.g., Toronto" required></div>
+<div><label>Province/State</label><input type="text" id="state-province" placeholder="e.g., ON" required></div>
+<div class="full-width"><button type="submit" class="btn btn-orange btn-block">Compare Quotes</button></div>
+</form></div>
+<div class="util-bar"><span class="label">Currency</span><div class="cur-toggle"><button class="active" data-cur="CAD" onclick="toggleCurrency('CAD')">C$ CAD</button><button data-cur="USD" onclick="toggleCurrency('USD')">US$ USD</button></div></div>
+<div id="quote-results"></div></div>
+</div>
+<div id="rental" class="page">
+<div class="form-page-header"><h1>Equipment Rental</h1><p>Excavators, skid steers, lifts — find the best rates.</p></div>
+<div class="page-container"><div class="form-card"><form id="rental-search-form" class="form-grid">
+<div class="full-width"><label>Equipment Type</label><input type="text" id="equipment-type" placeholder="e.g., Excavator" required></div>
+<div><label>Min Period</label><select id="rental-period-min"><option value="day">Day</option><option value="week" selected>Week</option><option value="month">Month</option></select></div>
+<div><label>Min Duration</label><input type="number" id="rental-duration-min" min="1" value="1" required></div>
+<div><label>Max Period</label><select id="rental-period-max"><option value="day">Day</option><option value="week">Week</option><option value="month" selected>Month</option></select></div>
+<div><label>Max Duration</label><input type="number" id="rental-duration-max" min="1" value="2" required></div>
+<div><label>City</label><input type="text" id="rental-city" placeholder="e.g., Toronto" required></div>
+<div><label>Province/State</label><input type="text" id="rental-state" placeholder="e.g., ON" required></div>
+<div class="full-width"><button type="submit" class="btn btn-orange btn-block">Compare Rentals</button></div>
+</form></div>
+<div class="util-bar"><span class="label">Currency</span><div class="cur-toggle"><button class="active" data-cur="CAD" onclick="toggleCurrency('CAD')">C$ CAD</button><button data-cur="USD" onclick="toggleCurrency('USD')">US$ USD</button></div></div>
+<div id="rental-results"></div></div>
+</div>
+<div id="site-services" class="page">
+<div class="form-page-header"><h1>Site Services</h1><p>Portable toilets, temp fencing, dumpsters.</p></div>
+<div class="page-container"><div class="form-card"><form id="site-services-form" class="form-grid">
+<div><label>Service</label><select id="service-type" required><option value="toilet">Portable Toilet</option><option value="fencing">Temp Fencing</option><option value="dumpster">Dumpster</option></select></div>
+<div><label>Details</label><input type="text" id="service-details" placeholder="e.g., 3 toilets" required></div>
+<div><label>Date</label><input type="date" id="service-date" required></div>
+<div><label>City</label><input type="text" id="service-city" placeholder="e.g., Toronto" required></div>
+<div><label>Province/State</label><input type="text" id="service-state" placeholder="e.g., ON" required></div>
+<div class="full-width"><button type="submit" class="btn btn-orange btn-block">Request Service</button></div>
+</form></div>
+<div id="site-services-results"></div></div>
+</div>
+<div id="freight" class="page">
+<div class="form-page-header"><h1>Freight &amp; Hauling</h1><p>Get quotes for transporting materials and equipment.</p></div>
+<div class="page-container"><div class="form-card"><form id="freight-form" class="form-grid">
+<div><label>Load Type</label><select id="load-type" required><option value="aggregate">Aggregates</option><option value="equipment">Equipment</option><option value="material">Material</option></select></div>
+<div><label>Weight/Vol</label><input type="text" id="weight" placeholder="e.g., 10 tonnes" required></div>
+<div><label>Pickup</label><input type="text" id="pickup-location" placeholder="e.g., Barrie, ON" required></div>
+<div><label>Delivery</label><input type="text" id="delivery-location" placeholder="e.g., Toronto, ON" required></div>
+<div><label>Date</label><input type="date" id="freight-date" required></div>
+<div class="full-width"><button type="submit" class="btn btn-orange btn-block">Request Freight</button></div>
+</form></div>
+<div id="freight-results"></div></div>
+</div>
+<div id="irrigation" class="page">
+<div class="form-page-header"><h1>Irrigation &amp; Drainage</h1><p>Sprinklers, drip systems, drainage solutions.</p></div>
+<div class="page-container"><div class="form-card"><form id="irrigation-form" class="form-grid">
+<div><label>System</label><select id="irrigation-type" required><option value="sprinkler">Sprinkler</option><option value="drip">Drip</option><option value="drainage">Drainage</option></select></div>
+<div><label>Area</label><input type="text" id="area-size" placeholder="e.g., 2 acres" required></div>
+<div><label>Date</label><input type="date" id="irrigation-date" required></div>
+<div><label>City</label><input type="text" id="irrigation-city" placeholder="e.g., Toronto" required></div>
+<div><label>Province/State</label><input type="text" id="irrigation-state" placeholder="e.g., ON" required></div>
+<div class="full-width"><button type="submit" class="btn btn-orange btn-block">Request</button></div>
+</form></div>
+<div id="irrigation-results"></div></div>
+</div>
+<div id="erosion" class="page"><div class="form-page-header"><h1>Erosion Control</h1><p>Silt fences, blankets, wattles.</p></div>
+<div class="page-container"><div class="form-card"><form id="erosion-form" class="form-grid"><div><label>Type</label><select id="erosion-type" required><option value="silt-fence">Silt Fence</option><option value="blanket">Erosion Blanket</option><option value="straw-wattles">Straw Wattles</option></select></div><div><label>Qty/Length</label><input type="text" id="erosion-quantity" placeholder="e.g., 500ft" required></div><div><label>Date</label><input type="date" id="erosion-date" required></div><div><label>City</label><input type="text" id="erosion-city" placeholder="e.g., Toronto" required></div><div><label>Province/State</label><input type="text" id="erosion-state" placeholder="e.g., ON" required></div><div class="full-width"><button type="submit" class="btn btn-orange btn-block">Request</button></div></form></div><div id="erosion-results"></div></div></div>
+<div id="fuel-lubricants" class="page"><div class="form-page-header"><h1>Fuel &amp; Lubricants</h1><p>Diesel, DEF, oils — delivered to your site.</p></div><div class="page-container"><div class="form-card"><form id="fuel-form" class="form-grid"><div><label>Product</label><select id="fuel-type" required><option value="diesel">Diesel</option><option value="def">DEF Fluid</option><option value="engine-oil">Engine Oil</option><option value="hydraulic-oil">Hydraulic Oil</option></select></div><div><label>Quantity</label><input type="text" id="fuel-quantity" placeholder="e.g., 1000L" required></div><div><label>Date</label><input type="date" id="fuel-date" required></div><div><label>City</label><input type="text" id="fuel-city" placeholder="e.g., Toronto" required></div><div><label>Province/State</label><input type="text" id="fuel-state" placeholder="e.g., ON" required></div><div class="full-width"><button type="submit" class="btn btn-orange btn-block">Request</button></div></form></div><div id="fuel-results"></div></div></div>
+<div id="fencing" class="page"><div class="form-page-header"><h1>Fencing</h1><p>Temporary chain-link, barricades.</p></div><div class="page-container"><div class="form-card"><form id="fencing-form" class="form-grid"><div><label>Type</label><select id="fence-type" required><option value="chain-link">Chain-Link</option><option value="barricade">Barricade</option></select></div><div><label>Length (ft)</label><input type="number" id="fence-length" min="1" required></div><div><label>Duration (days)</label><input type="number" id="fence-duration" min="1" required></div><div><label>City</label><input type="text" id="fence-city" placeholder="e.g., Toronto" required></div><div><label>Province/State</label><input type="text" id="fence-state" placeholder="e.g., ON" required></div><div class="full-width"><button type="submit" class="btn btn-orange btn-block">Request</button></div></form></div><div id="fencing-results"></div></div></div>
+<div id="dumpsters" class="page"><div class="form-page-header"><h1>Dumpsters</h1><p>10–30 yd³ bins for your site.</p></div><div class="page-container"><div class="form-card"><form id="dumpsters-form" class="form-grid"><div><label>Size</label><select id="dumpster-size" required><option value="10">10 yd³</option><option value="20">20 yd³</option><option value="30">30 yd³</option></select></div><div><label>Duration (days)</label><input type="number" id="dumpster-duration" min="1" required></div><div><label>Date</label><input type="date" id="dumpster-date" required></div><div><label>City</label><input type="text" id="dumpster-city" placeholder="e.g., Toronto" required></div><div><label>Province/State</label><input type="text" id="dumpster-state" placeholder="e.g., ON" required></div><div class="full-width"><button type="submit" class="btn btn-orange btn-block">Request</button></div></form></div><div id="dumpsters-results"></div></div></div>
+<div id="fuel-tanks" class="page"><div class="form-page-header"><h1>Fuel Tanks</h1><p>Temporary on-site fuel storage.</p></div><div class="page-container"><div class="form-card"><form id="fuel-tank-form" class="form-grid"><div><label>Capacity (L)</label><input type="number" id="tank-capacity" min="100" required></div><div><label>Location</label><input type="text" id="tank-location" placeholder="e.g., Site A" required></div><div><label>Date</label><input type="date" id="tank-date" required></div><div><label>City</label><input type="text" id="tank-city" placeholder="e.g., Toronto" required></div><div><label>Province/State</label><input type="text" id="tank-state" placeholder="e.g., ON" required></div><div class="full-width"><button type="submit" class="btn btn-orange btn-block">Request</button></div></form></div><div id="fuel-tank-results"></div></div></div>
+<div id="dashboard" class="page"><div class="form-page-header"><h1>Dashboard</h1><p>Your saved quotes and project overview.</p></div><div class="page-container"><div id="dash-content"></div></div></div>
+<div id="suppliers" class="page"><div class="form-page-header"><h1>Supplier Directory</h1><p>20 suppliers across US &amp; Canada.</p></div>
+<div class="page-container"><div style="display:flex;gap:.75rem;margin-bottom:1.5rem;flex-wrap:wrap"><input type="text" id="sup-search" placeholder="Filter by name or city..." style="max-width:260px;font-size:.8125rem" oninput="filterSuppliers()"><select id="sup-cat" onchange="filterSuppliers()" style="max-width:200px;font-size:.8125rem"><option value="all">All Categories</option><option value="aggregates">Aggregates</option><option value="rental">Rental</option><option value="site-services">Site Services</option><option value="freight">Freight</option><option value="irrigation">Irrigation</option><option value="erosion">Erosion</option><option value="fuel-lubricants">Fuel & Lubes</option><option value="fencing">Fencing</option><option value="dumpsters">Dumpsters</option><option value="fuel-tanks">Fuel Tanks</option></select></div><div id="sup-list"></div></div></div>
+<div id="quotes" class="page"><div class="form-page-header"><h1>My Saved Quotes</h1><p>Compare and track your saved supplier quotes.</p></div><div class="page-container"><div id="quotes-content"></div></div></div>
+<footer class="site-footer">&copy; 2026 SiteSupply &mdash; North America's Construction Supply Marketplace</footer>
+</div>
+<nav class="mobile-bottomnav">
+<a href="#/" data-route="/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>Home</a>
+<a href="#/search" data-route="/search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>Search</a>
+<a href="#/quotes" data-route="/quotes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>Quotes</a>
+<a href="#/dashboard" data-route="/dashboard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Dashboard</a>
+</nav>
+<script>
+const S={currency:'CAD',rate:1.37,savedQuotes:[]};
+const SUPPLIERS=[
+{id:'S1',name:'ABC Stone & Gravel',city:'Toronto, ON',country:'CA',cats:['aggregates','freight'],rating:4.8,av:'AB'},
+{id:'S2',name:'Ontario Aggregates Ltd',city:'Barrie, ON',country:'CA',cats:['aggregates','freight','erosion'],rating:4.5,av:'OA'},
+{id:'S3',name:'Great Lakes Stone',city:'Hamilton, ON',country:'CA',cats:['aggregates','freight'],rating:4.3,av:'GL'},
+{id:'S4',name:'XYZ Equipment Rentals',city:'Mississauga, ON',country:'CA',cats:['rental'],rating:4.9,av:'XY'},
+{id:'S5',name:'HeavyLift Rentals',city:'London, ON',country:'CA',cats:['rental','freight'],rating:4.6,av:'HL'},
+{id:'S6',name:'CleanCo Site Services',city:'Toronto, ON',country:'CA',cats:['site-services','fencing','dumpsters'],rating:4.7,av:'CC'},
+{id:'S7',name:'SitePro Services',city:'Kitchener, ON',country:'CA',cats:['site-services','fencing','dumpsters'],rating:4.4,av:'SP'},
+{id:'S8',name:'NorthernFreight Co',city:'Sudbury, ON',country:'CA',cats:['freight'],rating:4.2,av:'NF'},
+{id:'S9',name:'GreenFlow Irrigation',city:'Guelph, ON',country:'CA',cats:['irrigation','erosion'],rating:4.5,av:'GF'},
+{id:'S10',name:'EcoErosion Control',city:'Kingston, ON',country:'CA',cats:['erosion'],rating:4.3,av:'EE'},
+{id:'S11',name:'FuelExpress Canada',city:'Toronto, ON',country:'CA',cats:['fuel-lubricants','fuel-tanks'],rating:4.6,av:'FE'},
+{id:'S12',name:'SecureFence Ontario',city:'Ottawa, ON',country:'CA',cats:['fencing'],rating:4.8,av:'SF'},
+{id:'S13',name:'WastePro Dumpsters',city:'Mississauga, ON',country:'CA',cats:['dumpsters'],rating:4.5,av:'WP'},
+{id:'S14',name:'Tank Solutions Inc',city:'Barrie, ON',country:'CA',cats:['fuel-tanks'],rating:4.4,av:'TS'},
+{id:'S15',name:'Michigan Aggregates',city:'Detroit, MI',country:'US',cats:['aggregates','freight'],rating:4.6,av:'MA'},
+{id:'S16',name:'Buffalo Stone Supply',city:'Buffalo, NY',country:'US',cats:['aggregates','freight'],rating:4.4,av:'BS'},
+{id:'S17',name:'Empire Equipment Rental',city:'New York, NY',country:'US',cats:['rental'],rating:4.7,av:'EE'},
+{id:'S18',name:'Midwest Site Services',city:'Chicago, IL',country:'US',cats:['site-services','fencing'],rating:4.3,av:'MW'},
+{id:'S19',name:'Lone Star Freight',city:'Dallas, TX',country:'US',cats:['freight'],rating:4.5,av:'LS'},
+{id:'S20',name:'Pacific Irrigation',city:'Seattle, WA',country:'US',cats:['irrigation','erosion'],rating:4.6,av:'PI'}
+];
+const COORDS={'Toronto, ON':[43.65,-79.38],'Barrie, ON':[44.39,-79.69],'Hamilton, ON':[43.26,-79.87],'Mississauga, ON':[43.59,-79.64],'London, ON':[42.98,-81.25],'Kitchener, ON':[43.45,-80.49],'Guelph, ON':[43.55,-80.25],'Kingston, ON':[44.27,-76.58],'Sudbury, ON':[46.49,-81.01],'Ottawa, ON':[45.42,-75.70],'Detroit, MI':[42.33,-83.05],'Buffalo, NY':[42.89,-78.88],'New York, NY':[40.71,-74.01],'Chicago, IL':[41.88,-87.63],'Dallas, TX':[32.78,-96.80],'Seattle, WA':[47.61,-122.33]};
+function getCoords(l){if(!l)return null;l=l.trim();if(COORDS[l])return COORDS[l];for(const[k,c]of Object.entries(COORDS))if(l.toLowerCase().includes(k.split(',')[0].toLowerCase()))return c;return null}
+function hKm(la1,lo1,la2,lo2){const R=6371,dl=(la2-la1)*Math.PI/180,dL=(lo2-lo1)*Math.PI/180,a=Math.sin(dl/2)**2+Math.cos(la1*Math.PI/180)*Math.cos(la2*Math.PI/180)*Math.sin(dL/2)**2;return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a))}
+function fmtPrice(u){const v=S.currency==='CAD'?Math.round(u*S.rate*100)/100:u,sym=S.currency==='CAD'?'C$':'US$';return sym+v.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}
+function genQuotes(cat,item,qty,buyerCity){const bc=getCoords(buyerCity);return SUPPLIERS.filter(s=>s.cats.includes(cat)).map(s=>{const sc=getCoords(s.city),d=bc&&sc?Math.round(hKm(bc[0],bc[1],sc[0],sc[1])):null;let u=150+Math.floor(Math.random()*500);if(d)u+=Math.round(d*1.1);return{id:'Q'+Date.now()+Math.random().toString(36).slice(2,6),cat,item,qty,supplierId:s.id,supplierName:s.name,supplierLoc:s.city,supplierCountry:s.country,supplierRating:s.rating,av:s.av,priceUSD:u,distanceKm:d,delivery:`${1+Math.floor(Math.random()*5)} days`,ts:new Date().toISOString()}}).sort((a,b)=>(a.distanceKm||9999)-(b.distanceKm||9999))}
+function qCard(q){const sv=S.savedQuotes.find(sq=>sq.id===q.id),fl=q.supplierCountry==='CA'?'🇨🇦':'🇺🇸';return`<div class="quote-card"><div style="display:flex;justify-content:space-between;align-items:flex-start"><div><div class="q-supplier">${q.supplierName} ${fl}</div><div class="q-loc">${q.supplierLoc}</div><div class="q-rating" style="margin-top:2px">${'★'.repeat(Math.floor(q.supplierRating))}${q.supplierRating%1>=.5?'½':''} ${q.supplierRating}</div></div><div style="text-align:right"><div class="q-price">${fmtPrice(q.priceUSD)}</div><div class="q-currency">${S.currency} · ${q.item} × ${q.qty}</div></div></div><div class="q-meta"><span>📦 ${q.delivery}</span><span class="q-distance">📍 ${q.distanceKm?q.distanceKm+' km':'Unknown'}</span>${q.supplierCountry!=='CA'&&S.currency==='CAD'?`<span style="color:var(--orange);font-size:.6875rem;font-weight:600">⚠ Cross-border</span>`:''}</div><div class="q-actions"><button class="btn ${sv?'btn-emerald':'btn-primary'} btn-sm" onclick="saveQuote('${q.id}')">${sv?'✓ Saved':'Save Quote'}</button><button class="btn btn-ghost btn-sm" onclick="contact('${q.supplierId}')">Message</button></div></div>`}
+function renderResults(qs,cid){const el=document.getElementById(cid);if(!el)return;if(!qs||!qs.length){el.innerHTML='<div class="empty"><div class="empty-icon">🔍</div><p>No suppliers found for this location. Try a nearby city.</p></div>';return}el._q=qs;el.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem"><span style="font-size:.8125rem;color:var(--gray-400);font-weight:500">${qs.length} supplier${qs.length>1?'s':''}</span><select style="padding:.3rem .5rem;border:1px solid var(--gray-200);border-radius:var(--radius);font-size:.75rem;font-family:var(--font);color:var(--gray-600)" onchange="sortQuotes('${cid}',this.value)"><option value="distance">Nearest first</option><option value="price">Lowest price</option><option value="rating">Highest rated</option></select></div>${qs.map(qCard).join('')}`}
+function sortQuotes(cid,by){const el=document.getElementById(cid),qs=[...el._q];if(by==='price')qs.sort((a,b)=>a.priceUSD-b.priceUSD);else if(by==='rating')qs.sort((a,b)=>b.supplierRating-a.supplierRating);else qs.sort((a,b)=>(a.distanceKm||9999)-(b.distanceKm||9999));el._q=qs;renderResults(qs,cid)}
+function saveQuote(qid){const ids=['quote-results','rental-results','site-services-results','freight-results','irrigation-results','erosion-results','fuel-results','fencing-results','dumpsters-results','fuel-tank-results'];let found=null;for(const id of ids){const el=document.getElementById(id);if(el&&el._q){found=el._q.find(q=>q.id===qid);if(found)break}}if(!found)return;const idx=S.savedQuotes.findIndex(q=>q.id===qid);idx>=0?S.savedQuotes.splice(idx,1):S.savedQuotes.push({...found,savedAt:new Date().toISOString()});updateUI()}
+function contact(sid){const s=SUPPLIERS.find(x=>x.id===sid);alert(`Opening chat with ${s?s.name:'supplier'}...
 
-<script src="app.js"></script>
+(In production, this opens real-time messaging.)`)}
+function bindForm(fid,cat,getIQ,getCity,resId){const f=document.getElementById(fid);if(!f)return;f.addEventListener('submit',function(e){e.preventDefault();const[i,q]=getIQ(),c=getCity();renderResults(genQuotes(cat,i,q,c),resId);document.getElementById(resId)?.scrollIntoView({behavior:'smooth'})})}
+bindForm('quote-search-form','aggregates',()=>[document.getElementById('material-type').value,'1 load'],()=>`${document.getElementById('city').value.trim()}, ${document.getElementById('state-province').value.trim()}`,'quote-results');
+bindForm('rental-search-form','rental',()=>{const e=document.getElementById('equipment-type').value.trim();return[e,`${document.getElementById('rental-duration-min').value} ${document.getElementById('rental-period-min').value} – ${document.getElementById('rental-duration-max').value} ${document.getElementById('rental-period-max').value}`]},()=>`${document.getElementById('rental-city').value.trim()}, ${document.getElementById('rental-state').value.trim()}`,'rental-results');
+bindForm('site-services-form','site-services',()=>[document.getElementById('service-type').value,document.getElementById('service-details').value.trim()],()=>`${document.getElementById('service-city').value.trim()}, ${document.getElementById('service-state').value.trim()}`,'site-services-results');
+bindForm('freight-form','freight',()=>[document.getElementById('load-type').value,`${document.getElementById('weight').value.trim()} (${document.getElementById('pickup-location').value.trim()} → ${document.getElementById('delivery-location').value.trim()})`],()=>document.getElementById('pickup-location').value.trim(),'freight-results');
+bindForm('irrigation-form','irrigation',()=>[document.getElementById('irrigation-type').value,document.getElementById('area-size').value.trim()],()=>`${document.getElementById('irrigation-city').value.trim()}, ${document.getElementById('irrigation-state').value.trim()}`,'irrigation-results');
+bindForm('erosion-form','erosion',()=>[document.getElementById('erosion-type').value,document.getElementById('erosion-quantity').value.trim()],()=>`${document.getElementById('erosion-city').value.trim()}, ${document.getElementById('erosion-state').value.trim()}`,'erosion-results');
+bindForm('fuel-form','fuel-lubricants',()=>[document.getElementById('fuel-type').value,document.getElementById('fuel-quantity').value.trim()],()=>`${document.getElementById('fuel-city').value.trim()}, ${document.getElementById('fuel-state').value.trim()}`,'fuel-results');
+bindForm('fencing-form','fencing',()=>[document.getElementById('fence-type').value,`${document.getElementById('fence-length').value}ft × ${document.getElementById('fence-duration').value} days`],()=>`${document.getElementById('fence-city').value.trim()}, ${document.getElementById('fence-state').value.trim()}`,'fencing-results');
+bindForm('dumpsters-form','dumpsters',()=>[`${document.getElementById('dumpster-size').value} yd³`,`${document.getElementById('dumpster-duration').value} days`],()=>`${document.getElementById('dumpster-city').value.trim()}, ${document.getElementById('dumpster-state').value.trim()}`,'dumpsters-results');
+bindForm('fuel-tank-form','fuel-tanks',()=>[`${document.getElementById('tank-capacity').value}L tank`,document.getElementById('tank-location').value.trim()],()=>`${document.getElementById('tank-city').value.trim()}, ${document.getElementById('tank-state').value.trim()}`,'fuel-tank-results');
+function toggleCurrency(cur){S.currency=cur;document.querySelectorAll('.cur-toggle button').forEach(b=>b.classList.toggle('active',b.dataset.cur===cur));updateUI()}
+const RM={'':'home','/':'home',search:'search',rental:'rental','site-services':'site-services',freight:'freight',irrigation:'irrigation',erosion:'erosion','fuel-lubricants':'fuel-lubricants',fencing:'fencing',dumpsters:'dumpsters','fuel-tanks':'fuel-tanks',quotes:'quotes',dashboard:'dashboard',suppliers:'suppliers'};
+function showPage(pid){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));const t=document.getElementById(pid);if(t)t.classList.add('active');document.querySelectorAll('[data-route]').forEach(a=>a.classList.toggle('active',a.dataset.route==='/'+pid||(pid==='home'&&a.dataset.route==='https://hermes-agent.nousresearch.com/')));if(pid==='home')updateUI();if(pid==='quotes')renderQuotesPage();if(pid==='dashboard')renderDashboard();if(pid==='suppliers')renderSuppliersPage();window.scrollTo(0,0)}
+function handleHashChange(){const h=location.hash||'#/',r=h.replace('#','').split('https://hermes-agent.nousresearch.com/')[1]||'';showPage(RM[r]||'home')}
+window.addEventListener('hashchange',handleHashChange);window.addEventListener('load',handleHashChange);
+function updateUI(){const el=document.getElementById('hero-saved');if(el)el.textContent=S.savedQuotes.length;if(document.getElementById('quotes')?.classList.contains('active'))renderQuotesPage();if(document.getElementById('dashboard')?.classList.contains('active'))renderDashboard()}
+function renderQuotesPage(){const p=document.getElementById('quotes-content');if(!p)return;if(S.savedQuotes.length===0){p.innerHTML='<div class="empty"><div class="empty-icon">📋</div><p>No saved quotes yet. Search a category and click "Save Quote" to build your comparison list.</p><a href="#/search" class="btn btn-orange">Start Searching</a></div>';return}p.innerHTML=S.savedQuotes.map(qCard).join('')}
+function renderDashboard(){const p=document.getElementById('dash-content');if(!p)return;const t=S.savedQuotes.reduce((s,q)=>s+(S.currency==='CAD'?Math.round(q.priceUSD*S.rate*100)/100:q.priceUSD),0);p.innerHTML=`<div class="stats-row"><div class="stat-item"><div class="stat-item-value">${S.savedQuotes.length}</div><div class="stat-item-label">Saved Quotes</div></div><div class="stat-item"><div class="stat-item-value">${fmtPrice(t).replace('C$','').replace('US$','')}</div><div class="stat-item-label">Est. Value (${S.currency})</div></div><div class="stat-item"><div class="stat-item-value">${new Set(S.savedQuotes.map(q=>q.supplierId)).size}</div><div class="stat-item-label">Suppliers</div></div><div class="stat-item"><div class="stat-item-value">${new Set(S.savedQuotes.map(q=>q.cat)).size}</div><div class="stat-item-label">Categories</div></div></div>${S.savedQuotes.length===0?'<div class="empty"><p>Save quotes to build your dashboard.</p></div>':`<div style="overflow-x:auto;background:var(--white);border-radius:var(--radius-lg);box-shadow:var(--shadow);border:1px solid var(--gray-100)"><table class="data-table"><thead><tr><th>Supplier</th><th>Category</th><th>Item</th><th>Price</th><th>Status</th></tr></thead><tbody>${S.savedQuotes.map(q=>`<tr><td><strong>${q.supplierName}</strong><br><span style="font-size:.6875rem;color:var(--gray-400)">${q.supplierLoc}</span></td><td>${q.cat}</td><td>${q.item}</td><td>${fmtPrice(q.priceUSD)}</td><td><span class="badge badge-amber">Requested</span></td></tr>`).join('')}</tbody></table></div>`}<p style="margin-top:1rem;font-size:.6875rem;color:var(--gray-400)">1 USD = ${S.rate} CAD · ${S.currency} selected</p>`}
+function renderSuppliersPage(){const p=document.getElementById('sup-list');if(!p)return;p.innerHTML=SUPPLIERS.map(s=>`<div class="sup-card" data-cats="${s.cats.join(',')}" data-name="${s.name.toLowerCase()}" data-city="${s.city.toLowerCase()}"><div class="sup-avatar">${s.av}</div><div class="sup-info"><div class="sup-name">${s.name} ${s.country==='CA'?'🇨🇦':'🇺🇸'}</div><div class="sup-cats">${s.cats.map(c=>`<span class="badge badge-outline">${c}</span>`).join(' ')}</div><div class="sup-meta">📍 ${s.city} · ⭐ ${s.rating}</div></div></div>`).join('')}
+function filterSuppliers(){const q=(document.getElementById('sup-search')?.value||'').toLowerCase(),cat=document.getElementById('sup-cat')?.value||'all';document.querySelectorAll('#sup-list .sup-card').forEach(c=>{const n=c.dataset.name||'',ci=c.dataset.city||'',cs=(c.dataset.cats||'').split(',');c.style.display=(!q||n.includes(q)||ci.includes(q))&&(cat==='all'||cs.includes(cat))?'':'none'})}
+</script>
 </body>
 </html>
