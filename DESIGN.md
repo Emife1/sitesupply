@@ -1,56 +1,36 @@
----
-version: alpha
-name: SiteSupply
-description: Industrial precision meets digital trust — a construction supply marketplace for North America.
-colors:
-  primary: "#0F1D3D"
-  secondary: "#F45B1A"
-  tertiary: "#0D8C5E"
-  neutral: "#F8F9FB"
-  background: "#FFFFFF"
-  surface: "#FFFFFF"
-  text: "#1A1E23"
-  muted: "#6B7480"
-typography:
-  h1:
-    fontFamily: Inter
-    fontSize: clamp(2rem,5vw,3.5rem)
-    fontWeight: 800
-    lineHeight: 1.1
-    letterSpacing: "-0.04em"
-  h2:
-    fontFamily: Inter
-    fontSize: 1.75rem
-    fontWeight: 700
-    letterSpacing: "-0.03em"
-  body:
-    fontFamily: Inter
-    fontSize: 0.9375rem
-    fontWeight: 400
-    lineHeight: 1.6
-  caption:
-    fontFamily: Inter
-    fontSize: 0.6875rem
-    fontWeight: 600
-    letterSpacing: "0.05em"
-rounded:
-  sm: 10px
-  md: 14px
-  lg: 20px
-  pill: 9999px
-spacing:
-  sm: 8px
-  md: 16px
-  lg: 24px
-components:
-  button-primary:
-    backgroundColor: "{colors.primary}"
-    textColor: "#FFFFFF"
-    rounded: "{rounded.sm}"
-  button-cta:
-    backgroundColor: "{colors.secondary}"
-    textColor: "#FFFFFF"
-    rounded: "{rounded.pill}"
-  card:
-    backgroundColor: "{colors.surface}"
-    rounded: "{rounded.md}"
+# SiteSupply visual system
+
+## Direction
+
+SiteSupply uses an editorial construction language rather than a generic SaaS card system. The visual hierarchy is built from photography, hairline dividers, asymmetric grids, restrained controls and clear operational copy.
+
+## Typography
+
+- Display and headings: Bricolage Grotesque, weights 500–700
+- Body and interface: Instrument Sans, weights 400–700
+- Display text is capped at 56px on desktop and 40px on small screens.
+- Body copy remains 16–18px with generous line height.
+
+## Colour
+
+- Deep navy: #11213F
+- Orange action accent: #E65A2B
+- Green operational accent: #147A5A
+- Warm paper background: #F4F1EA
+- Primary ink: #171A1F
+
+## Component rules
+
+- Prefer rows, dividers, lists and photographic panels over repeated rounded cards.
+- Default radius is 9–12px; circular shapes are reserved for status dots and identifiers.
+- Avoid decorative shadows. Use borders and spacing to create hierarchy.
+- Buttons are solid only for primary actions; secondary actions use a thin border.
+- Motion is limited to 180–220ms hover and focus feedback and respects reduced-motion preferences.
+
+## Photography
+
+Use authentic construction, material-handling, supplier and accessibility imagery. Avoid staged handshake photography, generic skyline images and AI-generated people. Crops should preserve the work context and never obscure a safety-critical detail.
+
+## Accessibility
+
+Maintain keyboard focus, readable contrast, semantic landmarks, descriptive alternative text, 44px-class touch targets and a single-column mobile reading order.
