@@ -747,3 +747,36 @@
   .workspace-page .topbar-actions{display:grid;grid-template-columns:1fr;width:100%}
   .workspace-page .control-group{display:grid;grid-template-columns:auto 1fr 1fr;align-items:center}
 }
+
+
+/* WORKSPACE_MOBILE_NAV_REPAIR_V9 */
+@media(max-width:900px){
+  .workspace-page .mobile-nav{
+    overflow-x:auto;
+    overflow-y:hidden;
+    scroll-padding-inline:12px;
+    -webkit-overflow-scrolling:touch;
+  }
+  .workspace-page .mobile-link{
+    flex:0 0 auto;
+    display:flex;
+    width:auto;
+    min-width:96px;
+    min-height:58px;
+    align-items:center;
+    justify-content:center;
+    gap:6px;
+    padding:9px 12px;
+    white-space:nowrap;
+    text-align:center;
+  }
+  .workspace-page .mobile-link:hover,
+  .workspace-page .mobile-link.active{padding-left:12px}
+  .workspace-page .mobile-link .nav-arrow{display:none}
+  .workspace-page .mobile-link .nav-index{flex:none}
+}
+@media(max-width:430px){
+  .workspace-page .mobile-link{min-width:88px;padding-inline:10px;font-size:12px}
+  .workspace-page .mobile-link:hover,
+  .workspace-page .mobile-link.active{padding-left:10px}
+}
