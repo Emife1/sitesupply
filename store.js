@@ -63,10 +63,10 @@ function persist() {
 
 export const store = {
   getState() { return state; },
-  setState(patch) {
+  setState(patch, { notify = true } = {}) {
     state = { ...state, ...patch };
     persist();
-    listeners.forEach(fn => fn(state));
+    if (notify) listeners.forEach(fn => fn(state));
   },
   patch(updater) {
     const next = updater(structuredClone(state));

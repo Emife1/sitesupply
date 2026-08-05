@@ -51,3 +51,10 @@ body{font-family:var(--font);font-size:16px;line-height:1.65;background:var(--pa
 
 /* MOBILE_EDITORIAL_TUNE */
 @media(max-width:700px){.hero-copy h1{font-size:clamp(34px,10.2vw,40px);line-height:1.03}.hero-actions{display:grid;grid-template-columns:1fr;width:100%}.hero-actions .button{width:100%}.trust-line{display:grid;grid-template-columns:1fr;gap:8px;margin-bottom:28px}.hero-media{margin-top:16px}.page-hero h1{font-size:36px}}
+
+
+/* PUBLIC_DETAIL_POLISH_V5 */
+.live-badge:before,.live-badge::before{display:none!important;content:none!important;box-shadow:none!important}
+.page-hero{padding-top:76px}.page-hero .breadcrumb{margin-bottom:28px;line-height:1.55}.page-hero .container{padding-inline:8px}
+.site-footer .brand{display:inline-flex!important;align-items:center!important;gap:10px;margin:0 0 18px;text-decoration:none}.site-footer .brand img{display:block;flex:0 0 36px;width:36px;height:36px}.site-footer .brand span{display:flex;align-items:center;min-height:36px;color:#fff!important;line-height:1}
+@media(max-width:700px){.page-hero{padding-top:50px}.page-hero .container{padding-inline:2px}.page-hero .breadcrumb{margin-bottom:22px}}
