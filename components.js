@@ -36,7 +36,7 @@ export const panel = (title, sub, body) => {
 };
 
 export const supplierCard = (s, selected = false) => `
-  <button type="button" class="card ${selected ? 'selected' : ''}" data-supplier="${s.id}">
+  <button type="button" class="card ${selected ? 'selected' : ''}" data-supplier="${s.id}" aria-label="Open supplier ${escapeHtml(s.name)}">
     <div class="card-row">
       <div>
         <h3>${escapeHtml(s.name)}</h3>
@@ -50,7 +50,7 @@ export const supplierCard = (s, selected = false) => `
   </button>`;
 
 export const projectCard = (p, selected = false, pinned = false) => `
-  <button type="button" class="card ${selected ? 'selected' : ''}" data-project="${p.id}">
+  <button type="button" class="card ${selected ? 'selected' : ''}" data-project="${p.id}" aria-label="Open project ${escapeHtml(p.name)}">
     <div class="card-row">
       <div>
         <h3>${escapeHtml(p.name)}</h3>
@@ -97,11 +97,13 @@ export const quoteTable = rows => `
   </div>`;
 
 export const commandOverlay = ({ open, query, results }) => `
-  <div class="command-backdrop ${open ? 'show' : ''}" data-command-close>
-    <div class="command-panel" role="dialog" aria-modal="true" aria-label="Global command palette" onclick="event.stopPropagation()">
+  <div class="command-backdrop ${open ? 'show' : ''}" data-command-backdrop>
+    <div class="command-panel" data-command-panel role="dialog" aria-modal="true" aria-labelledby="command-title">
       <div class="command-head">
-        <input class="command-input" data-command-input placeholder="Search projects, suppliers, messages, or commands" value="${escapeHtml(query)}" />
-        <button class="pill" data-command-close>Esc</button>
+        <div class="command-search-copy"><span id="command-title">Search workspace</span><small>Projects, suppliers, messages, and commands</small></div>
+        <button type="button" class="pill" data-command-close aria-label="Close workspace search">Esc</button>
+      </div>
+      <input class="command-input" data-command-input autocomplete="off" aria-label="Search workspace" placeholder="Type to search…" value="${escapeHtml(query)}" />
       </div>
       <div class="command-groups">
         <div class="command-group"><h3>Projects</h3>${results.projects.map(p => `<button class="command-item" data-project="${p.id}">${escapeHtml(p.name)}<span>${escapeHtml(p.location)}</span></button>`).join('') || '<div class="command-empty">No project matches</div>'}</div>

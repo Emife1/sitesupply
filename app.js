@@ -32,7 +32,6 @@ const toggleRole = () => {
   store.setState({ role: next, route: next === 'supplier' ? 'supplier-portal' : 'home' });
   routeTo(next === 'supplier' ? 'supplier-portal' : 'home');
 };
-const setCategory = categoryId => store.setState({ activeCategory: categoryId, route: categoryId });
 const setQuery = (query, { defer = false } = {}) => {
   if (!defer) return store.setState({ query });
   store.setState({ query }, { notify: false });
@@ -41,11 +40,15 @@ const setQuery = (query, { defer = false } = {}) => {
 };
 const setCountry = country => store.setState({ country });
 const setSelectedProject = id => {
-  store.setState({ selectedProject: id });
+  const shouldOpen = state().route !== 'projects';
+  store.setState({ selectedProject: id, ...(shouldOpen ? { route: 'projects', commandOpen: false } : {}) });
+  if (shouldOpen) routeTo('projects');
   markRecent('project', id, projectService.get(id)?.name || id);
 };
 const setSelectedSupplier = id => {
-  store.setState({ selectedSupplier: id });
+  const shouldOpen = state().route !== 'suppliers';
+  store.setState({ selectedSupplier: id, ...(shouldOpen ? { route: 'suppliers', commandOpen: false } : {}) });
+  if (shouldOpen) routeTo('suppliers');
   markRecent('supplier', id, supplierService.get(id)?.name || id);
 };
 const toggleCommand = open => store.setState({ commandOpen: typeof open === 'boolean' ? open : !state().commandOpen });
@@ -67,7 +70,7 @@ function buildShell(content, inspector) {
     <div class="app-shell">
       <aside class="shell-sidebar">
         <a class="brand-block" href="/" aria-label="Return to SiteSupply public site">
-          <img class="brand-mark" src="/assets/logo.svg" alt="">
+          <span class="brand-mark" aria-hidden="true">SS</span>
           <span>
             <span class="brand-name">SiteSupply</span>
             <span class="brand-sub">Construction sourcing workspace</span>
@@ -102,10 +105,13 @@ function buildShell(content, inspector) {
           </div>
         </header>
         <div class="shell-toolbar">
-          <label class="search-inline" aria-label="Search SiteSupply">
-            <span>Search</span>
-            <input data-search value="${escapeHtml(s.query)}" placeholder="Projects, suppliers, messages, commands" />
-          </label>
+          <div class="search-block">
+            <span class="search-label">Search workspace</span>
+            <button type="button" class="search-trigger" data-command-open aria-haspopup="dialog" aria-label="Search projects, suppliers, messages, and commands">
+              <span><strong>${s.query ? escapeHtml(s.query) : 'Projects, suppliers, messages, commands'}</strong><small>Open workspace search</small></span>
+              <kbd>⌘K</kbd>
+            </button>
+          </div>
           <div class="toolbar-filter" role="group" aria-label="Supplier region"><span class="control-label">Supplier region</span><div class="toolbar-chips">
             <button class="pill ${s.country === 'ALL' ? 'primary' : ''}" data-country="ALL" aria-pressed="${s.country === 'ALL'}">All regions</button>
             <button class="pill ${s.country === 'CA' ? 'primary' : ''}" data-country="CA" aria-pressed="${s.country === 'CA'}">Canada</button>
@@ -119,7 +125,7 @@ function buildShell(content, inspector) {
       </aside>
     </div>
     <nav class="mobile-nav">${mobile}</nav>
-    ${commandOverlay({ open: s.commandOpen, query: s.query, results: searchService.search(s.query) })}
+    ${s.commandOpen ? commandOverlay({ open: true, query: s.query, results: searchService.search(s.query) }) : ''}
   `;
 }
 
@@ -135,15 +141,15 @@ function formForCategory(categoryId) {
   return `
     <form class="quote-form" data-quote-form="${categoryId}">
       ${category.fields.map(field => field.type === 'select' ? `
-        <label class="field">
+        <label class="field select-field">
           <span>${escapeHtml(field.label)}</span>
-          <select data-quote-input="${field.id}" data-category="${categoryId}">
+          <select data-quote-input="${field.id}" data-quote-category="${categoryId}">
             ${field.options.map(option => `<option ${String(values[field.id] ?? field.value ?? '') === option ? 'selected' : ''}>${escapeHtml(option)}</option>`).join('')}
           </select>
         </label>` : `
         <label class="field">
           <span>${escapeHtml(field.label)}</span>
-          <input data-quote-input="${field.id}" data-category="${categoryId}" type="${field.type}" min="${field.min ?? ''}" placeholder="${escapeHtml(field.placeholder || '')}" value="${escapeHtml(values[field.id] ?? field.value ?? '')}" />
+          <input data-quote-input="${field.id}" data-quote-category="${categoryId}" type="${field.type}" min="${field.min ?? ''}" placeholder="${escapeHtml(field.placeholder || '')}" value="${escapeHtml(values[field.id] ?? field.value ?? '')}" />
         </label>`).join('')}
       <div class="quote-actions">
         <button class="button primary" type="submit">Compare quotes</button>
@@ -337,17 +343,21 @@ function renderByRoute() {
 function render() {
   if (!app) return;
   const active = document.activeElement;
-  const focusSelector = active?.matches?.('[data-search]') ? '[data-search]' : active?.matches?.('[data-command-input]') ? '[data-command-input]' : null;
-  const selectionStart = focusSelector ? active.selectionStart : null;
-  const selectionEnd = focusSelector ? active.selectionEnd : null;
+  const commandFocused = active?.matches?.('[data-command-input]');
+  const selectionStart = commandFocused ? active.selectionStart : null;
+  const selectionEnd = commandFocused ? active.selectionEnd : null;
   if (mapInstance) { try { mapInstance.remove(); } catch {} mapInstance = null; mapMarkerLayer = null; }
   app.innerHTML = renderByRoute();
-  if (focusSelector) {
+  if (state().commandOpen) {
     requestAnimationFrame(() => {
-      const next = app.querySelector(focusSelector);
+      const next = app.querySelector('[data-command-input]');
       if (!next) return;
       next.focus({ preventScroll: true });
-      if (typeof selectionStart === 'number' && typeof next.setSelectionRange === 'function') next.setSelectionRange(selectionStart, selectionEnd);
+      if (typeof selectionStart === 'number' && typeof next.setSelectionRange === 'function') {
+        next.setSelectionRange(selectionStart, selectionEnd);
+      } else if (typeof next.setSelectionRange === 'function') {
+        next.setSelectionRange(next.value.length, next.value.length);
+      }
     });
   }
   requestAnimationFrame(initMapIfNeeded);
@@ -368,7 +378,7 @@ function initMapIfNeeded() {
   suppliers.forEach(s => {
     const marker = window.L.marker(s.coords).addTo(mapMarkerLayer).bindPopup(`<strong>${escapeHtml(s.name)}</strong><br>${escapeHtml(s.city)}<br>★ ${s.rating.toFixed(1)}`);
     points.push(marker);
-    window.L.circle(s.coords, { radius: 50000, color: '#F45B1A', fillColor: '#F45B1A', fillOpacity: 0.06, weight: 1 }).addTo(mapInstance);
+    window.L.circle(s.coords, { radius: 50000, color: '#4B7096', fillColor: '#4B7096', fillOpacity: 0.06, weight: 1 }).addTo(mapInstance);
   });
   try {
     mapInstance.fitBounds(window.L.featureGroup(points).getBounds().pad(0.1));
@@ -380,10 +390,13 @@ function buildCommandResults() {
 }
 
 app.addEventListener('click', event => {
-  const target = event.target.closest('[data-route],[data-category],[data-currency],[data-country],[data-role-switch],[data-project],[data-supplier],[data-command-open],[data-command-close],[data-reset-category],[data-pin]');
+  const target = event.target.closest('[data-route],[data-currency],[data-country],[data-role-switch],[data-project],[data-supplier],[data-command-open],[data-command-close],[data-command-backdrop],[data-reset-category],[data-pin]');
   if (!target) return;
+  if (target.hasAttribute('data-command-backdrop')) {
+    if (event.target === target) toggleCommand(false);
+    return;
+  }
   if (target.dataset.route) return setRoute(target.dataset.route);
-  if (target.dataset.category) return setCategory(target.dataset.category);
   if (target.dataset.currency) return setCurrency(target.dataset.currency);
   if (target.dataset.country) return setCountry(target.dataset.country);
   if (target.hasAttribute('data-role-switch')) return toggleRole();
@@ -409,16 +422,15 @@ app.addEventListener('click', event => {
 
 app.addEventListener('input', event => {
   const target = event.target;
-  if (target.matches('[data-search]')) return setQuery(target.value, { defer: true });
   if (target.matches('[data-command-input]')) return setQuery(target.value, { defer: true });
   if (target.matches('[data-country]')) return setCountry(target.value);
-  if (target.matches('input[data-quote-input]')) return updateQuoteInput(target.dataset.category, target.dataset.quoteInput, target.value);
+  if (target.matches('input[data-quote-input]')) return updateQuoteInput(target.dataset.quoteCategory, target.dataset.quoteInput, target.value);
 });
 
 app.addEventListener('change', event => {
   const target = event.target;
   if (target.matches('select[data-quote-input]')) {
-    updateQuoteInput(target.dataset.category, target.dataset.quoteInput, target.value);
+    updateQuoteInput(target.dataset.quoteCategory, target.dataset.quoteInput, target.value);
   }
 });
 
