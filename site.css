@@ -90,3 +90,81 @@ a,button,input,select,textarea{touch-action:manipulation}
   .field input,.field select,.field textarea{font-size:16px}
   [data-sivanta-widget-root] [data-panel]{width:calc(100vw - 24px - env(safe-area-inset-left) - env(safe-area-inset-right))!important;max-height:calc(100dvh - 84px - env(safe-area-inset-top) - env(safe-area-inset-bottom))!important}
 }
+
+
+/* FORM_CONTROL_REPAIR_V9 */
+.field input[type="checkbox"],
+.field input[type="radio"]{
+  appearance:none;
+  -webkit-appearance:none;
+  width:20px;
+  height:20px;
+  min-width:20px;
+  min-height:20px;
+  padding:0;
+  margin:1px 0 0;
+  flex:0 0 20px;
+  display:grid;
+  place-content:center;
+  border:1.5px solid var(--line-dark);
+  border-radius:5px;
+  background:rgba(255,255,255,.78);
+  color:var(--orange);
+  cursor:pointer;
+  box-shadow:none;
+}
+.field input[type="checkbox"]::before{
+  content:'';
+  width:10px;
+  height:10px;
+  transform:scale(0);
+  transform-origin:center;
+  transition:transform .14s ease-in-out;
+  background:currentColor;
+  clip-path:polygon(14% 44%,0 59%,40% 100%,100% 20%,84% 6%,39% 72%);
+}
+.field input[type="checkbox"]:checked::before{transform:scale(1)}
+.field input[type="checkbox"]:checked{
+  border-color:var(--orange);
+  background:#fff;
+}
+.field input[type="checkbox"]:focus-visible,
+.field input[type="radio"]:focus-visible{
+  outline:3px solid rgba(230,90,43,.22);
+  outline-offset:3px;
+  border-color:var(--orange);
+}
+.check-row{
+  display:grid;
+  grid-template-columns:20px minmax(0,1fr);
+  align-items:start;
+  gap:10px;
+  width:100%;
+  min-width:0;
+  color:#454d56;
+  line-height:1.48;
+  cursor:pointer;
+}
+.check-row span{
+  display:block;
+  min-width:0;
+  overflow-wrap:anywhere;
+}
+fieldset .grid-3{
+  align-items:start;
+  gap:2px 22px;
+}
+fieldset .grid-3 .check-row{
+  min-height:44px;
+  padding:10px 0;
+  border-bottom:1px solid var(--line);
+}
+.field.full > .check-row{
+  max-width:780px;
+  padding:8px 0 2px;
+}
+@media(max-width:700px){
+  fieldset .grid-3{grid-template-columns:1fr}
+  fieldset .grid-3 .check-row{min-height:48px}
+  .field.full > .check-row{max-width:none}
+}
