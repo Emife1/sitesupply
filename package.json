@@ -1,0 +1,15 @@
+{
+  "name": "sitesupply",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "SiteSupply construction sourcing and supplier matching platform.",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "test": "node scripts/validate.mjs",
+    "check": "node scripts/validate.mjs"
+  },
+  "dependencies": {
+    "@neondatabase/serverless": "1.1.0"
+  }
+}

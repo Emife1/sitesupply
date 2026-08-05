@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#F8F9FB"/>
+  <circle cx="1050" cy="80" r="270" fill="#F45B1A" opacity=".12"/>
+  <circle cx="1070" cy="560" r="320" fill="#0D8C5E" opacity=".10"/>
+  <rect x="80" y="82" width="88" height="88" rx="24" fill="#0F1D3D"/>
+  <path d="M102 142v-31l22-13 22 13v31h-15v-20h-14v20h-15Z" fill="#fff"/>
+  <text x="80" y="250" font-family="Inter,Arial,sans-serif" font-size="32" font-weight="700" fill="#F45B1A">CONSTRUCTION SOURCING, SIMPLIFIED</text>
+  <text x="80" y="345" font-family="Inter,Arial,sans-serif" font-size="82" font-weight="800" fill="#0D1114">SiteSupply</text>
+  <text x="80" y="420" font-family="Inter,Arial,sans-serif" font-size="34" fill="#4A5159">Connect projects with materials, equipment,</text>
+  <text x="80" y="468" font-family="Inter,Arial,sans-serif" font-size="34" fill="#4A5159">freight and accessibility-focused suppliers.</text>
+  <rect x="80" y="525" width="286" height="58" rx="29" fill="#0F1D3D"/>
+  <text x="223" y="563" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="24" font-weight="700" fill="#fff">Ontario early access</text>
+</svg>

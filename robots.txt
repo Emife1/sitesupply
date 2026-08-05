@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /workspace
+Disallow: /api/
+
+Sitemap: https://sitesupply-eight.vercel.app/sitemap.xml

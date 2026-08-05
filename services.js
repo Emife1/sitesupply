@@ -59,7 +59,7 @@ export const quoteService = {
         total: money(total, currency),
         eta,
         confidence: Math.max(81, 96 - index * 3),
-        notes: [supplier.tags?.[0] || 'current pricing', supplier.country === 'US' ? 'cross-border' : 'regional']
+        notes: ['demo estimate', supplier.country === 'US' ? 'cross-border scenario' : 'regional scenario']
       };
     }).sort((a, b) => a.rate - b.rate);
   }

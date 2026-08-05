@@ -1,0 +1,10 @@
+{
+  "name": "SiteSupply",
+  "short_name": "SiteSupply",
+  "description": "Construction sourcing and supplier matching for Ontario.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F8F9FB",
+  "theme_color": "#0F1D3D",
+  "icons": [{ "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }]
+}

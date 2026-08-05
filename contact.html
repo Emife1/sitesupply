@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en-CA">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Contact SiteSupply</title>
+  <meta name="description" content="Contact SiteSupply about Ontario construction sourcing, supplier verification, accessibility procurement or partnerships.">
+  <meta name="robots" content="index,follow">
+  <meta name="theme-color" content="#0F1D3D">
+  <meta name="ga-measurement-id" content="">
+  <link rel="canonical" href="https://sitesupply-eight.vercel.app/contact">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/site.css">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="SiteSupply">
+  <meta property="og:title" content="Contact SiteSupply">
+  <meta property="og:description" content="Contact SiteSupply about Ontario construction sourcing, supplier verification, accessibility procurement or partnerships.">
+  <meta property="og:url" content="https://sitesupply-eight.vercel.app/contact">
+  <meta property="og:image" content="https://sitesupply-eight.vercel.app/assets/og-image.svg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Contact SiteSupply">
+  <meta name="twitter:description" content="Contact SiteSupply about Ontario construction sourcing, supplier verification, accessibility procurement or partnerships.">
+  <meta name="twitter:image" content="https://sitesupply-eight.vercel.app/assets/og-image.svg">
+</head>
+<body itemscope itemtype="https://schema.org/WebPage">
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <a class="brand" href="/" aria-label="SiteSupply home"><img src="/assets/logo.svg" alt=""><span>SiteSupply<small>Construction sourcing, simplified</small></span></a>
+      <button class="menu-button" type="button" aria-label="Open navigation" aria-expanded="false" data-menu-button>Menu</button>
+      <nav class="main-nav" aria-label="Primary navigation" data-main-nav><a href="/">Home</a><a href="/compare">Request quotes</a><a href="/suppliers">Suppliers</a><a href="/accessibility">Accessibility</a><a href="/about">About</a><a href="/contact" aria-current="page">Contact</a></nav>
+      <div class="nav-actions"><a class="button secondary small" href="/workspace">Live workspace</a><a class="button accent small" href="/compare">Start a request</a></div>
+    </div>
+  </header>
+  <section class="page-hero"><div class="container"><div class="breadcrumb"><a href="/">Home</a> / Start with the problem you are trying to solve.</div><span class="eyebrow">Contact</span><h1>Start with the problem you are trying to solve.</h1><p>Use this form for partnerships, launch questions, supplier verification or general SiteSupply enquiries.</p></div></section>
+<main id="main"><section class="section"><div class="container form-layout"><form class="form-card" data-endpoint="/api/contact"><h2 style="margin-top:0">Send a message</h2><div class="form-grid"><div class="field"><label for="name">Name *</label><input id="name" name="name" required minlength="2" autocomplete="name"></div><div class="field"><label for="email">Email *</label><input id="email" name="email" type="email" required autocomplete="email"></div><div class="field full"><label for="company">Company</label><input id="company" name="company" autocomplete="organization"></div><div class="field full"><label for="subject">Subject *</label><input id="subject" name="subject" required minlength="3"></div><div class="field full"><label for="message">Message *</label><textarea id="message" name="message" required minlength="10" maxlength="5000"></textarea></div><div class="honeypot" aria-hidden="true"><label for="contact_fax">Fax</label><input id="contact_fax" name="fax_number" tabindex="-1"></div><div class="field full"><button class="button primary full" type="submit">Send message</button><div class="form-status" data-form-status></div></div></div></form><aside class="info-card"><span class="live-badge">Digital intake active</span><h2>Use the right path</h2><p>For active sourcing, use the quote request form so the category and project details are captured correctly.</p><p><a class="button accent full" href="/compare">Request supplier quotes</a></p><p>For supplier onboarding, use the founding supplier application.</p><p><a class="button secondary full" href="/suppliers#apply">Supplier application</a></p></aside></div></section></main>
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div><a class="brand" href="/"><img src="/assets/logo.svg" alt=""><span style="color:white">SiteSupply</span></a><p>Early-access construction sourcing for Ontario projects, suppliers, equipment, freight and accessibility-focused work.</p></div>
+        <div><h3>Platform</h3><a href="/compare">Request quotes</a><a href="/suppliers">Supplier network</a><a href="/workspace">Live workspace</a></div>
+        <div><h3>Company</h3><a href="/about">About</a><a href="/accessibility">Accessibility sourcing</a><a href="/contact">Contact</a></div>
+        <div><h3>Trust</h3><a href="/privacy">Privacy</a><a href="/terms">Terms</a><a href="/api/health">System status</a></div>
+      </div>
+      <div class="footer-bottom"><span>© <span data-year></span> SiteSupply. Ontario, Canada.</span><span>Early access. Supplier details and availability are verified before publication.</span></div>
+    </div>
+  </footer>
+  <div class="toast" role="status" aria-live="polite" data-toast></div>
+  <script type="module" src="/site.js"></script>
+  <script type="module" src="/analytics.js"></script>
+</body>
+</html>

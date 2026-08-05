@@ -100,3 +100,8 @@
   .mobile-nav { display: flex; }
   .shell-content { padding-bottom: 5rem; }
 }
+
+.workspace-note { display:flex; align-items:flex-start; justify-content:space-between; gap:1rem; padding:.9rem 1rem; border:1px solid #fed7aa; border-radius:16px; background:#fff7ed; color:#9a3412; }
+.workspace-note strong { color:#7c2d12; white-space:nowrap; }
+.workspace-note span { font-size:.85rem; }
+@media(max-width:880px){ .workspace-note{flex-direction:column}.workspace-note strong{white-space:normal} }

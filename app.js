@@ -54,7 +54,7 @@ function updateQuoteInput(categoryId, fieldId, value) {
 function buildShell(content, inspector) {
   const s = state();
   const nav = NAV_ITEMS.map(item => navButton(item, s.route === item.id)).join('');
-  const mobile = NAV_ITEMS.slice(0, 5).map(item => mobileButton(item, s.route === item.id)).join('');
+  const mobile = NAV_ITEMS.map(item => mobileButton(item, s.route === item.id)).join('');
   return `
     <div class="app-shell">
       <aside class="shell-sidebar">
@@ -62,7 +62,7 @@ function buildShell(content, inspector) {
           <div class="brand-mark">SS</div>
           <div>
             <div class="brand-name">SiteSupply</div>
-            <div class="brand-sub">Workspace procurement OS</div>
+            <div class="brand-sub">Construction sourcing workspace</div>
           </div>
         </div>
         <div class="sidebar-section">
@@ -105,7 +105,7 @@ function buildShell(content, inspector) {
             <button class="pill ${s.country === 'US' ? 'primary' : ''}" data-country="US">US</button>
           </div>
         </div>
-        <div class="shell-content">${content}</div>
+        <div class="shell-content"><div class="workspace-note"><strong>Live workspace · early access</strong><span>Public intake is production-connected. Supplier prices and fit scores shown inside this workspace are demonstration data until a supplier responds.</span></div>${content}</div>
       </main>
       <aside class="shell-inspector">
         ${inspector}
@@ -188,11 +188,11 @@ function renderCategory(categoryId) {
     ${hero({ kicker: category.name, title: `Compare ${category.name.toLowerCase()} quotes.`, subtitle: category.helper, actions: `<button class="button primary" data-route="projects">Back to project workspace</button><button class="button secondary" data-route="suppliers">Browse suppliers</button>` })}
     <section class="grid-2">
       ${panel('Request parameters', category.description, formForCategory(categoryId))}
-      ${panel('Quote comparison', 'Ranked by estimated landed cost and serviceability.', quoteTable(quotes))}
+      ${panel('Quote comparison', 'Demonstration planning estimates only. Supplier-issued quotes replace these values in production.', quoteTable(quotes))}
     </section>
     <section class="grid-2">
       ${panel('Matched suppliers', 'Filtered to this category and current scope.', cardList(suppliers.map(s => supplierCard(s, s.id === state().selectedSupplier)).join('')))}
-      ${panel('Recommendation', 'Best-fit supplier profiles for the current request.', `<div class="inspector-list">${quotes.slice(0, 3).map(q => `<div class="inspector-item"><div><strong>${escapeHtml(q.supplier.name)}</strong><span>${escapeHtml(q.notes.join(' · '))}</span></div><span class="tag">${escapeHtml(q.total)}</span></div>`).join('')}</div>`)}
+      ${panel('Recommendation', 'Demonstration fit ordering for the workspace prototype.', `<div class="inspector-list">${quotes.slice(0, 3).map(q => `<div class="inspector-item"><div><strong>${escapeHtml(q.supplier.name)}</strong><span>${escapeHtml(q.notes.join(' · '))}</span></div><span class="tag">${escapeHtml(q.total)}</span></div>`).join('')}</div>`)}
     </section>
   `;
   const inspector = `
@@ -317,7 +317,8 @@ function renderDashboard() {
 
 function renderByRoute() {
   const route = state().route;
-  if (route === 'dashboard' || route === 'home') return renderDashboard();
+  if (route === 'home') return renderHome();
+  if (route === 'dashboard') return renderDashboard();
   if (route === 'projects') return renderProjects();
   if (route === 'suppliers') return renderSuppliers();
   if (route === 'messages') return renderMessages();
@@ -327,6 +328,8 @@ function renderByRoute() {
 }
 
 function render() {
+  if (!app) return;
+  if (mapInstance) { try { mapInstance.remove(); } catch {} mapInstance = null; mapMarkerLayer = null; }
   app.innerHTML = renderByRoute();
   requestAnimationFrame(initMapIfNeeded);
 }
@@ -358,7 +361,7 @@ function buildCommandResults() {
 }
 
 app.addEventListener('click', event => {
-  const target = event.target.closest('[data-route],[data-category],[data-currency],[data-role-switch],[data-project],[data-supplier],[data-command-open],[data-command-close],[data-reset-category],[data-pin]');
+  const target = event.target.closest('[data-route],[data-category],[data-currency],[data-country],[data-role-switch],[data-project],[data-supplier],[data-command-open],[data-command-close],[data-reset-category],[data-pin]');
   if (!target) return;
   if (target.dataset.route) return setRoute(target.dataset.route);
   if (target.dataset.category) return setCategory(target.dataset.category);

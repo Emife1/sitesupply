@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title">
+  <title id="title">SiteSupply</title>
+  <rect width="64" height="64" rx="18" fill="#0F1D3D"/>
+  <path d="M16 42V25l16-9 16 9v17H37V31H27v11H16Z" fill="#fff"/>
+  <path d="M32 16v15" stroke="#F45B1A" stroke-width="5" stroke-linecap="round"/>
+  <path d="M22 48h20" stroke="#0D8C5E" stroke-width="5" stroke-linecap="round"/>
+</svg>

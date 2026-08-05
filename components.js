@@ -86,7 +86,7 @@ export const leadCard = l => `
 export const quoteTable = rows => `
   <div class="table-wrap">
     <table class="table">
-      <thead><tr><th>Supplier</th><th>Rate</th><th>ETA</th><th>Confidence</th><th>Notes</th></tr></thead>
+      <thead><tr><th>Supplier</th><th>Planning estimate</th><th>ETA</th><th>Demo fit</th><th>Notes</th></tr></thead>
       <tbody>
         ${rows.map(row => `<tr>
           <td><strong>${escapeHtml(row.supplier.name)}</strong><div class="muted">${escapeHtml(row.supplier.city)}</div></td>
