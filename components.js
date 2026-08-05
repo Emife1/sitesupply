@@ -104,7 +104,6 @@ export const commandOverlay = ({ open, query, results }) => `
         <button type="button" class="pill" data-command-close aria-label="Close workspace search">Esc</button>
       </div>
       <input class="command-input" data-command-input autocomplete="off" aria-label="Search workspace" placeholder="Type to search…" value="${escapeHtml(query)}" />
-      </div>
       <div class="command-groups">
         <div class="command-group"><h3>Projects</h3>${results.projects.map(p => `<button class="command-item" data-project="${p.id}">${escapeHtml(p.name)}<span>${escapeHtml(p.location)}</span></button>`).join('') || '<div class="command-empty">No project matches</div>'}</div>
         <div class="command-group"><h3>Suppliers</h3>${results.suppliers.map(s => `<button class="command-item" data-supplier="${s.id}">${escapeHtml(s.name)}<span>${escapeHtml(s.city)}</span></button>`).join('') || '<div class="command-empty">No supplier matches</div>'}</div>
