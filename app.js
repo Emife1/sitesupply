@@ -6,6 +6,7 @@ import { hero, metricStrip, navButton, mobileButton, panel, cardList, supplierCa
 const app = document.getElementById('app');
 let mapInstance = null;
 let mapMarkerLayer = null;
+let queryRenderTimer = null;
 
 const state = () => store.getState();
 const currentCategory = () => CATEGORIES[state().activeCategory] || CATEGORIES.aggregates;
@@ -32,7 +33,12 @@ const toggleRole = () => {
   routeTo(next === 'supplier' ? 'supplier-portal' : 'home');
 };
 const setCategory = categoryId => store.setState({ activeCategory: categoryId, route: categoryId });
-const setQuery = query => store.setState({ query });
+const setQuery = (query, { defer = false } = {}) => {
+  if (!defer) return store.setState({ query });
+  store.setState({ query }, { notify: false });
+  window.clearTimeout(queryRenderTimer);
+  queryRenderTimer = window.setTimeout(render, 120);
+};
 const setCountry = country => store.setState({ country });
 const setSelectedProject = id => {
   store.setState({ selectedProject: id });
@@ -53,18 +59,18 @@ function updateQuoteInput(categoryId, fieldId, value) {
 
 function buildShell(content, inspector) {
   const s = state();
-  const nav = NAV_ITEMS.map(item => navButton(item, s.route === item.id)).join('');
-  const mobile = NAV_ITEMS.map(item => mobileButton(item, s.route === item.id)).join('');
+  const nav = NAV_ITEMS.map((item, index) => navButton(item, s.route === item.id, index)).join('');
+  const mobile = NAV_ITEMS.map((item, index) => mobileButton(item, s.route === item.id, index)).join('');
   return `
     <div class="app-shell">
       <aside class="shell-sidebar">
-        <div class="brand-block">
-          <div class="brand-mark">SS</div>
-          <div>
-            <div class="brand-name">SiteSupply</div>
-            <div class="brand-sub">Construction sourcing workspace</div>
-          </div>
-        </div>
+        <a class="brand-block" href="/" aria-label="Return to SiteSupply public site">
+          <img class="brand-mark" src="/assets/logo.svg" alt="">
+          <span>
+            <span class="brand-name">SiteSupply</span>
+            <span class="brand-sub">Construction sourcing workspace</span>
+          </span>
+        </a>
         <div class="sidebar-section">
           <div class="sidebar-label">Navigate</div>
           <div class="sidebar-nav">${nav}</div>
@@ -72,9 +78,9 @@ function buildShell(content, inspector) {
         <div class="sidebar-section">
           <div class="sidebar-label">Context</div>
           <div class="context-panel">
-            <div><span>Project</span><strong>${escapeHtml(activeProject()?.name || '—')}</strong></div>
-            <div><span>Supplier</span><strong>${escapeHtml(activeSupplier()?.name || '—')}</strong></div>
-            <div><span>Mode</span><strong>${escapeHtml(s.role)}</strong></div>
+            <button class="context-action" type="button" data-route="projects"><span>Active project</span><strong>${escapeHtml(activeProject()?.name || '—')}</strong><em>Open project workspace</em></button>
+            <button class="context-action" type="button" data-route="suppliers"><span>Selected supplier</span><strong>${escapeHtml(activeSupplier()?.name || '—')}</strong><em>Review supplier details</em></button>
+            <button class="context-action" type="button" data-role-switch><span>Workspace mode</span><strong>${escapeHtml(s.role === 'buyer' ? 'Buyer view' : 'Supplier view')}</strong><em>Switch workspace mode</em></button>
           </div>
         </div>
         <div class="sidebar-section sidebar-footer">
@@ -89,9 +95,8 @@ function buildShell(content, inspector) {
             <div class="topbar-title">${escapeHtml(titleForRoute(s.route))}</div>
           </div>
           <div class="topbar-actions">
-            <button class="pill ${s.currency === 'CAD' ? 'primary' : ''}" data-currency="CAD">CAD</button>
-            <button class="pill ${s.currency === 'USD' ? 'primary' : ''}" data-currency="USD">USD</button>
-            <button class="pill accent" data-role-switch>${s.role === 'buyer' ? 'Buyer view' : 'Supplier view'}</button>
+            <div class="control-group" role="group" aria-label="Display currency"><span class="control-label">Currency</span><button class="pill ${s.currency === 'CAD' ? 'primary' : ''}" data-currency="CAD" aria-pressed="${s.currency === 'CAD'}">CAD</button><button class="pill ${s.currency === 'USD' ? 'primary' : ''}" data-currency="USD" aria-pressed="${s.currency === 'USD'}">USD</button></div>
+            <button class="pill role-control" data-role-switch aria-label="Switch between buyer and supplier workspace">${s.role === 'buyer' ? 'Buyer view' : 'Supplier view'}<span aria-hidden="true">↔</span></button>
           </div>
         </header>
         <div class="shell-toolbar">
@@ -99,13 +104,13 @@ function buildShell(content, inspector) {
             <span>Search</span>
             <input data-search value="${escapeHtml(s.query)}" placeholder="Projects, suppliers, messages, commands" />
           </label>
-          <div class="toolbar-chips">
-            <button class="pill ${s.country === 'ALL' ? 'primary' : ''}" data-country="ALL">All</button>
-            <button class="pill ${s.country === 'CA' ? 'primary' : ''}" data-country="CA">Canada</button>
-            <button class="pill ${s.country === 'US' ? 'primary' : ''}" data-country="US">US</button>
-          </div>
+          <div class="toolbar-filter" role="group" aria-label="Supplier region"><span class="control-label">Supplier region</span><div class="toolbar-chips">
+            <button class="pill ${s.country === 'ALL' ? 'primary' : ''}" data-country="ALL" aria-pressed="${s.country === 'ALL'}">All regions</button>
+            <button class="pill ${s.country === 'CA' ? 'primary' : ''}" data-country="CA" aria-pressed="${s.country === 'CA'}">Canada</button>
+            <button class="pill ${s.country === 'US' ? 'primary' : ''}" data-country="US" aria-pressed="${s.country === 'US'}">United States</button>
+          </div></div>
         </div>
-        <div class="shell-content"><div class="workspace-note"><strong>Live workspace · early access</strong><span>Public intake is production-connected. Supplier prices and fit scores shown inside this workspace are demonstration data until a supplier responds.</span></div>${content}</div>
+        <div class="shell-content"><div class="workspace-note"><div><span class="workspace-note-label">Workspace status</span><strong>Early access with production intake</strong></div><p>Public requests and supplier applications are live. Prices and fit scores inside this workspace remain clearly marked demonstration data until a supplier responds.</p><a href="/compare">Submit a real request <span aria-hidden="true">→</span></a></div>${content}</div>
       </main>
       <aside class="shell-inspector">
         ${inspector}
@@ -329,8 +334,20 @@ function renderByRoute() {
 
 function render() {
   if (!app) return;
+  const active = document.activeElement;
+  const focusSelector = active?.matches?.('[data-search]') ? '[data-search]' : active?.matches?.('[data-command-input]') ? '[data-command-input]' : null;
+  const selectionStart = focusSelector ? active.selectionStart : null;
+  const selectionEnd = focusSelector ? active.selectionEnd : null;
   if (mapInstance) { try { mapInstance.remove(); } catch {} mapInstance = null; mapMarkerLayer = null; }
   app.innerHTML = renderByRoute();
+  if (focusSelector) {
+    requestAnimationFrame(() => {
+      const next = app.querySelector(focusSelector);
+      if (!next) return;
+      next.focus({ preventScroll: true });
+      if (typeof selectionStart === 'number' && typeof next.setSelectionRange === 'function') next.setSelectionRange(selectionStart, selectionEnd);
+    });
+  }
   requestAnimationFrame(initMapIfNeeded);
 }
 
@@ -390,8 +407,8 @@ app.addEventListener('click', event => {
 
 app.addEventListener('input', event => {
   const target = event.target;
-  if (target.matches('[data-search]')) return setQuery(target.value);
-  if (target.matches('[data-command-input]')) return setQuery(target.value);
+  if (target.matches('[data-search]')) return setQuery(target.value, { defer: true });
+  if (target.matches('[data-command-input]')) return setQuery(target.value, { defer: true });
   if (target.matches('[data-country]')) return setCountry(target.value);
   if (target.matches('[data-quote-input]')) return updateQuoteInput(target.dataset.category, target.dataset.quoteInput, target.value);
 });

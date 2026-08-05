@@ -7,8 +7,8 @@ export const escapeHtml = value => String(value ?? '')
 
 export const pill = (label, active = false, attrs = '') => `<button class="pill ${active ? 'primary' : ''}" ${attrs}>${escapeHtml(label)}</button>`;
 
-export const navButton = (item, active) => `<button class="nav-link ${active ? 'active' : ''}" data-route="${item.id}">${escapeHtml(item.label)}</button>`;
-export const mobileButton = (item, active) => `<button class="mobile-link ${active ? 'active' : ''}" data-route="${item.id}"><span>•</span><span>${escapeHtml(item.label)}</span></button>`;
+export const navButton = (item, active, index = 0) => `<button class="nav-link ${active ? 'active' : ''}" data-route="${item.id}"><span class="nav-index">${String(index + 1).padStart(2, '0')}</span><span class="nav-text">${escapeHtml(item.label)}</span><span class="nav-arrow" aria-hidden="true">→</span></button>`;
+export const mobileButton = (item, active, index = 0) => `<button class="mobile-link ${active ? 'active' : ''}" data-route="${item.id}"><span class="nav-index">${String(index + 1).padStart(2, '0')}</span><span>${escapeHtml(item.label)}</span></button>`;
 
 export const hero = ({ kicker, title, subtitle, actions = '' }) => `
   <section class="hero">
@@ -26,11 +26,14 @@ export const metricStrip = metrics => `<section class="grid-4">${metrics.map(m =
   <div class="stat"><div class="label">${escapeHtml(m.label)}</div><div class="value">${escapeHtml(m.value)}</div><div class="hint">${escapeHtml(m.hint)}</div></div>`).join('')}</section>`;
 
 export const cardList = html => `<div class="card-list">${html}</div>`;
-export const panel = (title, sub, body) => `
-  <section class="panel">
+export const panel = (title, sub, body) => {
+  const slug = String(title).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+  return `
+  <section class="panel panel-${slug}">
     <div class="panel-head"><div><h2 class="panel-title">${escapeHtml(title)}</h2><p class="panel-sub">${escapeHtml(sub)}</p></div></div>
     ${body}
   </section>`;
+};
 
 export const supplierCard = (s, selected = false) => `
   <button type="button" class="card ${selected ? 'selected' : ''}" data-supplier="${s.id}">
@@ -42,10 +45,8 @@ export const supplierCard = (s, selected = false) => `
       <span class="badge">★ ${Number(s.rating).toFixed(1)}</span>
     </div>
     <div class="tag-wrap">${(s.tags || []).map(t => `<span class="tag">${escapeHtml(t)}</span>`).join(' ')}</div>
-    <div class="card-actions">
-      <span class="tag">${escapeHtml(s.website)}</span>
-      <span class="tag">${escapeHtml(s.phone)}</span>
-    </div>
+    <div class="card-actions"><span class="tag">${escapeHtml(s.website)}</span><span class="tag">${escapeHtml(s.phone)}</span></div>
+    <span class="card-cue">Open supplier <span aria-hidden="true">→</span></span>
   </button>`;
 
 export const projectCard = (p, selected = false, pinned = false) => `
@@ -57,16 +58,12 @@ export const projectCard = (p, selected = false, pinned = false) => `
       </div>
       <span class="chip">${escapeHtml(p.stage)}</span>
     </div>
-    <div class="card-actions">
-      <span class="tag">${escapeHtml(p.budget)}</span>
-      <span class="tag">${escapeHtml(p.supplierCount)} suppliers</span>
-      <span class="tag">Updated ${escapeHtml(p.updated)}</span>
-      ${pinned ? '<span class="tag accent">Pinned</span>' : ''}
-    </div>
+    <div class="card-actions"><span class="tag">${escapeHtml(p.budget)}</span><span class="tag">${escapeHtml(p.supplierCount)} suppliers</span><span class="tag">Updated ${escapeHtml(p.updated)}</span>${pinned ? '<span class="tag accent">Pinned</span>' : ''}</div>
+    <span class="card-cue">Open project <span aria-hidden="true">→</span></span>
   </button>`;
 
 export const messageCard = m => `
-  <div class="inspector-item">
+  <div class="inspector-item activity-item">
     <div>
       <strong>${escapeHtml(m.subject)}</strong>
       <span>${escapeHtml(m.from)} · ${escapeHtml(m.preview)}</span>
@@ -75,7 +72,7 @@ export const messageCard = m => `
   </div>`;
 
 export const leadCard = l => `
-  <div class="inspector-item">
+  <div class="inspector-item lead-item">
     <div>
       <strong>${escapeHtml(l.title)}</strong>
       <span>${escapeHtml(l.note)}</span>
