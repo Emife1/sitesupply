@@ -10,12 +10,12 @@ export const pill = (label, active = false, attrs = '') => `<button class="pill 
 export const navButton = (item, active, index = 0) => `<button class="nav-link ${active ? 'active' : ''}" data-route="${item.id}"><span class="nav-index">${String(index + 1).padStart(2, '0')}</span><span class="nav-text">${escapeHtml(item.label)}</span><span class="nav-arrow" aria-hidden="true">→</span></button>`;
 export const mobileButton = (item, active, index = 0) => `<button class="mobile-link ${active ? 'active' : ''}" data-route="${item.id}"><span class="nav-index">${String(index + 1).padStart(2, '0')}</span><span>${escapeHtml(item.label)}</span></button>`;
 
-export const hero = ({ kicker, title, subtitle, actions = '' }) => `
+export const hero = ({ kicker, title, accent = '', subtitle, actions = '' }) => `
   <section class="hero">
     <div class="hero-top">
       <div>
         <div class="kicker">${escapeHtml(kicker)}</div>
-        <h1>${escapeHtml(title)}</h1>
+        <h1>${escapeHtml(title)}${accent ? ` <em>${escapeHtml(accent)}</em>` : ''}</h1>
         <p>${escapeHtml(subtitle)}</p>
       </div>
       <div class="topbar-actions">${actions}</div>

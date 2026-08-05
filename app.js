@@ -70,10 +70,10 @@ function buildShell(content, inspector) {
     <div class="app-shell">
       <aside class="shell-sidebar">
         <a class="brand-block" href="/" aria-label="Return to SiteSupply public site">
-          <span class="brand-mark" aria-hidden="true">SS</span>
+          <img class="brand-mark" src="/assets/logo.svg" alt="">
           <span>
             <span class="brand-name">SiteSupply</span>
-            <span class="brand-sub">Construction sourcing workspace</span>
+            <span class="brand-sub">Construction sourcing, simplified</span>
           </span>
         </a>
         <div class="sidebar-section">
@@ -96,7 +96,7 @@ function buildShell(content, inspector) {
       <main class="shell-main">
         <header class="shell-topbar">
           <div>
-            <div class="topbar-kicker">Industrial precision · digital trust</div>
+            <div class="topbar-kicker">SiteSupply project workspace</div>
             <div class="topbar-title">${escapeHtml(titleForRoute(s.route))}</div>
           </div>
           <div class="topbar-actions">
@@ -118,7 +118,7 @@ function buildShell(content, inspector) {
             <button class="pill ${s.country === 'US' ? 'primary' : ''}" data-country="US" aria-pressed="${s.country === 'US'}">United States</button>
           </div></div>
         </div>
-        <div class="shell-content"><div class="workspace-note"><div><span class="workspace-note-label">Workspace status</span><strong>Early access with production intake</strong></div><p>Public requests and supplier applications are live. Prices and fit scores inside this workspace remain clearly marked demonstration data until a supplier responds.</p><a href="/compare">Submit a real request <span aria-hidden="true">→</span></a></div>${content}</div>
+        <div class="shell-content"><div class="workspace-note"><div><span class="workspace-note-label">Ontario early access is live</span><strong>Project context stays attached</strong></div><p>Public intake is live. Planning values remain clearly labelled demonstrations until a participating supplier provides a real response.</p><a href="/compare">Start a real request <span aria-hidden="true">→</span></a></div>${content}</div>
       </main>
       <aside class="shell-inspector">
         ${inspector}
@@ -165,7 +165,7 @@ function renderHome() {
   const projects = projectService.list().slice(0, 3);
   const messages = dashboardService.messages().slice(0, 4);
   const content = `
-    ${hero({ kicker: 'Workspace overview', title: 'Construction supply, instantly compared.', subtitle: 'One workspace for projects, suppliers, quotes, and live activity.', actions: `<button class="button primary" data-route="dashboard">Open dashboard</button><button class="button secondary" data-route="projects">Open project workspace</button>` })}
+    ${hero({ kicker: 'Project sourcing', title: 'Your sourcing work,', accent: 'organized properly.', subtitle: 'Keep project requirements, supplier options, quote planning, and activity attached to the same context.', actions: `<button class="button primary" data-route="dashboard">Open dashboard</button><button class="button secondary" data-route="projects">Open project workspace</button>` })}
     ${metricStrip(metrics)}
     <section class="grid-2">
       ${panel('Priority activity', 'What needs attention now.', `<div class="inspector-list">${messages.map(messageCard).join('')}</div>`)}
@@ -198,7 +198,7 @@ function renderCategory(categoryId) {
   const quotes = quoteService.compare(categoryId, state().quoteInputs[categoryId] || {}, state().currency);
   const suppliers = supplierService.list({ ...state(), activeCategory: categoryId });
   const content = `
-    ${hero({ kicker: category.name, title: `Compare ${category.name.toLowerCase()} quotes.`, subtitle: category.helper, actions: `<button class="button primary" data-route="projects">Back to project workspace</button><button class="button secondary" data-route="suppliers">Browse suppliers</button>` })}
+    ${hero({ kicker: category.name, title: `Prepare ${category.name.toLowerCase()} requests,`, accent: 'with the context attached.', subtitle: 'Set out the requirement clearly, review planning options, and keep supplier-issued pricing separate from demonstration values.', actions: `<button class="button primary" data-route="projects">Back to project workspace</button><button class="button secondary" data-route="suppliers">Browse suppliers</button>` })}
     <section class="grid-2">
       ${panel('Request parameters', category.description, formForCategory(categoryId))}
       ${panel('Quote comparison', 'Demonstration planning estimates only. Supplier-issued quotes replace these values in production.', quoteTable(quotes))}
@@ -228,7 +228,7 @@ function renderProjects() {
   const project = activeProject();
   const all = projectService.list();
   const content = `
-    ${hero({ kicker: 'Project workspace', title: 'Everything stays centered on one active project.', subtitle: 'Quotes, suppliers, deliveries, and documents remain in context.', actions: `<button class="button primary" data-route="dashboard">Back to dashboard</button><button class="button secondary" data-route="messages">Open messages</button>` })}
+    ${hero({ kicker: 'Project workspace', title: 'Keep every requirement', accent: 'with its project.', subtitle: 'Quotes, suppliers, deliveries, and documents remain attached to the project that created them.', actions: `<button class="button primary" data-route="dashboard">Back to dashboard</button><button class="button secondary" data-route="messages">Open messages</button>` })}
     <section class="grid-2">
       ${panel('Active project', 'The current working context.', project ? `<div class="project-summary"><strong>${escapeHtml(project.name)}</strong><span>${escapeHtml(project.location)}</span><span>${escapeHtml(project.stage)}</span><span>${escapeHtml(project.budget)}</span></div><div class="notice">Pinned and recent projects are synced across sessions.</div>` : '<div class="empty">No project selected.</div>')}
       ${panel('Project list', 'Select another project without leaving the workspace.', cardList(all.map(p => projectCard(p, p.id === state().selectedProject, state().pinnedProjects.includes(p.id))).join('')))}
@@ -252,7 +252,7 @@ function renderSuppliers() {
   const suppliers = supplierService.list(state());
   const active = activeSupplier();
   const content = `
-    ${hero({ kicker: 'Supplier directory', title: 'Filter, compare, and select suppliers.', subtitle: 'Network coverage with pinned context and quick selection.', actions: `<button class="button primary" data-route="dashboard">Back to dashboard</button><button class="button secondary" data-route="projects">Open projects</button>` })}
+    ${hero({ kicker: 'Supplier directory', title: 'Supplier coverage,', accent: 'without losing context.', subtitle: 'Review categories, service areas, and current project fit in one clear working view.', actions: `<button class="button primary" data-route="dashboard">Back to dashboard</button><button class="button secondary" data-route="projects">Open projects</button>` })}
     <section class="grid-2">
       ${panel('Supplier network', 'Live match results for the current filter set.', cardList(suppliers.map(s => supplierCard(s, s.id === state().selectedSupplier)).join('')))}
       ${panel('Selected supplier', 'Deep context for the current supplier.', active ? `<div class="context-stack"><div><strong>${escapeHtml(active.name)}</strong><span>${escapeHtml(active.city)}</span></div><div class="notice">${escapeHtml((active.tags || []).join(' · '))}</div><div class="project-summary"><span>Website</span><strong>${escapeHtml(active.website)}</strong><span>Phone</span><strong>${escapeHtml(active.phone)}</strong></div></div>` : '<div class="empty">No supplier selected.</div>')}
@@ -277,7 +277,7 @@ function renderSuppliers() {
 function renderMessages() {
   const messages = dashboardService.messages();
   const content = `
-    ${hero({ kicker: 'Messages', title: 'Keep supplier communication in one lane.', subtitle: 'Activity is visible without leaving the workspace.', actions: `<button class="button primary" data-route="dashboard">Back to dashboard</button>` })}
+    ${hero({ kicker: 'Messages', title: 'Keep every conversation', accent: 'with the work.', subtitle: 'Project and supplier communication stays visible without becoming a disconnected inbox.', actions: `<button class="button primary" data-route="dashboard">Back to dashboard</button>` })}
     ${panel('Inbox', 'Operational updates and RFQ replies.', `<div class="inspector-list">${messages.map(messageCard).join('')}</div>`)}
   `;
   const inspector = `
@@ -291,7 +291,7 @@ function renderMessages() {
 function renderPortal() {
   const leads = dashboardService.leads();
   const content = `
-    ${hero({ kicker: 'Supplier portal', title: 'Track inbound leads and work intake.', subtitle: 'A simple supplier-facing queue that can later connect to real auth.', actions: `<button class="button primary" data-route="dashboard">Buyer view</button>` })}
+    ${hero({ kicker: 'Supplier portal', title: 'Inbound opportunities,', accent: 'properly prepared.', subtitle: 'Review project demand with the context required for a useful supplier response.', actions: `<button class="button primary" data-route="dashboard">Buyer view</button>` })}
     ${panel('Lead queue', 'Pending opportunities and supplier activity.', `<div class="inspector-list">${leads.map(leadCard).join('')}</div>`) }
   `;
   const inspector = `
@@ -309,7 +309,7 @@ function renderDashboard() {
   const metrics = dashboardService.metrics();
   const active = activeProject();
   const content = `
-    ${hero({ kicker: 'Operations dashboard', title: 'A focused command center for procurement.', subtitle: 'Track savings, quotes, and activity without leaving context.', actions: `<button class="button primary" data-route="projects">Open projects</button><button class="button secondary" data-route="aggregates">Compare quotes</button>` })}
+    ${hero({ kicker: 'Operations overview', title: 'A clear view of', accent: 'what needs attention.', subtitle: 'See projects, requests, supplier activity, and planning values without turning the workspace into a wall of widgets.', actions: `<button class="button primary" data-route="projects">Open projects</button><button class="button secondary" data-route="aggregates">Compare quotes</button>` })}
     ${metricStrip(metrics)}
     <section class="grid-2">
       ${panel('Priority activity', 'What needs attention now.', `<div class="inspector-list">${dashboardService.messages().map(messageCard).join('')}</div>`)}
@@ -378,7 +378,7 @@ function initMapIfNeeded() {
   suppliers.forEach(s => {
     const marker = window.L.marker(s.coords).addTo(mapMarkerLayer).bindPopup(`<strong>${escapeHtml(s.name)}</strong><br>${escapeHtml(s.city)}<br>★ ${s.rating.toFixed(1)}`);
     points.push(marker);
-    window.L.circle(s.coords, { radius: 50000, color: '#4B7096', fillColor: '#4B7096', fillOpacity: 0.06, weight: 1 }).addTo(mapInstance);
+    window.L.circle(s.coords, { radius: 50000, color: '#E65A2B', fillColor: '#E65A2B', fillOpacity: 0.06, weight: 1 }).addTo(mapInstance);
   });
   try {
     mapInstance.fitBounds(window.L.featureGroup(points).getBounds().pad(0.1));

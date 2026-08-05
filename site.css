@@ -64,7 +64,7 @@ body{font-family:var(--font);font-size:16px;line-height:1.65;background:var(--pa
 .button.green{background:var(--orange);border-color:var(--orange);color:#fff}
 [data-sivanta-widget-root]{font-family:var(--font)!important}
 [data-sivanta-widget-root] [data-panel]{border-radius:12px!important;border-color:var(--line-dark)!important}
-[data-sivanta-widget-root] header{background:#365f8a!important}
+[data-sivanta-widget-root] header{background:var(--navy-deep)!important}
 [data-sivanta-widget-root] [data-launcher],
 [data-sivanta-widget-root] [data-send]{background:var(--orange)!important;border-radius:9px!important}
 [data-sivanta-widget-root] [data-message-role="customer"]{background:var(--orange)!important}
