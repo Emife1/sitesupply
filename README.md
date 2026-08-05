@@ -4,7 +4,7 @@ SiteSupply is an early-access construction sourcing and supplier-matching platfo
 
 ## Production surfaces
 
-- Public site: `https://sitesupply-eight.vercel.app`
+- Public site: `https://sitesupply.vercel.app`
 - Health endpoint: `/api/health`
 - Quote intake: `/compare`
 - Supplier onboarding: `/suppliers`

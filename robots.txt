@@ -3,4 +3,4 @@ Allow: /
 Disallow: /workspace
 Disallow: /api/
 
-Sitemap: https://sitesupply-eight.vercel.app/sitemap.xml
+Sitemap: https://sitesupply.vercel.app/sitemap.xml
