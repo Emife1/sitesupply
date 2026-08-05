@@ -18,7 +18,7 @@ for (const file of htmlFiles) {
 const workspace = fs.readFileSync(path.join(root, 'workspace.html'), 'utf8');
 if (!workspace.includes('id="app"') || !workspace.includes('src="/app.js"')) errors.push('workspace.html: app mount or module missing');
 const index = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
-if (!index.includes('Live early access') || !index.includes('/compare')) errors.push('index.html: launch CTA missing');
+if (!/early access/i.test(index) || !/href=[\"']\/compare[\"']/i.test(index)) errors.push('index.html: launch CTA missing');
 
 for (const file of jsFiles) {
   try { execFileSync(process.execPath, ['--check', path.join(root, file)], { stdio: 'pipe' }); }
