@@ -11,7 +11,7 @@ for (const file of htmlFiles) {
   const text = fs.readFileSync(path.join(root, file), 'utf8');
   if (!/<title>[^<]+<\/title>/i.test(text)) errors.push(`${file}: missing title`);
   if (!/<meta name="description" content="[^"]+"/i.test(text)) errors.push(`${file}: missing description`);
-  if (!/<link rel="canonical" href="https:\/\/sitesupply-eight\.vercel\.app/i.test(text)) errors.push(`${file}: missing canonical`);
+  if (!/<link rel="canonical" href="https:\/\/sitesupply\.vercel\.app/i.test(text)) errors.push(`${file}: missing canonical`);
   if (!/<main[^>]*id="main"/i.test(text)) errors.push(`${file}: missing main landmark`);
   if (/<body[^>]*>\s*<\/body>/i.test(text)) errors.push(`${file}: empty body`);
 }
