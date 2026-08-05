@@ -7,6 +7,7 @@ const app = document.getElementById('app');
 let mapInstance = null;
 let mapMarkerLayer = null;
 let queryRenderTimer = null;
+let lastRenderedRoute = null;
 
 const state = () => store.getState();
 const currentCategory = () => CATEGORIES[state().activeCategory] || CATEGORIES.aggregates;
@@ -358,6 +359,17 @@ function render() {
       } else if (typeof next.setSelectionRange === 'function') {
         next.setSelectionRange(next.value.length, next.value.length);
       }
+    });
+  }
+  const renderedRoute = state().route;
+  if (renderedRoute !== lastRenderedRoute) {
+    lastRenderedRoute = renderedRoute;
+    requestAnimationFrame(() => {
+      const mobileNav = app.querySelector('.mobile-nav');
+      const activeLink = mobileNav?.querySelector('.mobile-link.active');
+      if (!mobileNav || !activeLink || window.matchMedia('(min-width: 901px)').matches) return;
+      const left = activeLink.offsetLeft - ((mobileNav.clientWidth - activeLink.clientWidth) / 2);
+      mobileNav.scrollTo({ left: Math.max(0, left), behavior: 'smooth' });
     });
   }
   requestAnimationFrame(initMapIfNeeded);

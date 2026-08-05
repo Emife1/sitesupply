@@ -714,3 +714,36 @@
   .workspace-page .command-panel{padding:20px 16px}
   .workspace-page .search-trigger small{display:none}
 }
+
+
+/* WORKSPACE_MOBILE_HARDENING_V8 */
+.workspace-page{max-width:100%;overflow-x:clip}
+.workspace-page a,.workspace-page button,.workspace-page input,.workspace-page select{touch-action:manipulation}
+@media(max-width:900px){
+  .workspace-page .shell-topbar{top:0}
+  .workspace-page .mobile-nav{
+    scroll-snap-type:x proximity;
+    overscroll-behavior-x:contain;
+    scrollbar-width:thin;
+    padding:0 9px env(safe-area-inset-bottom);
+  }
+  .workspace-page .mobile-link{
+    min-height:56px;
+    scroll-snap-align:center;
+  }
+  .workspace-page .shell-content{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
+  .workspace-page [data-sivanta-widget-root]{
+    right:max(12px,env(safe-area-inset-right))!important;
+    bottom:calc(70px + env(safe-area-inset-bottom))!important;
+  }
+  .workspace-page [data-sivanta-widget-root] [data-launcher]{min-width:72px!important;min-height:48px!important}
+  .workspace-page .command-backdrop{padding:12px;padding-top:max(12px,env(safe-area-inset-top))}
+  .workspace-page .command-panel{width:min(760px,calc(100vw - 24px));max-height:calc(100dvh - 24px - env(safe-area-inset-top) - env(safe-area-inset-bottom))}
+}
+@media(max-width:600px){
+  .workspace-page .field input,.workspace-page .field select,.workspace-page .command-input{font-size:16px;min-height:46px}
+  .workspace-page .toolbar-chips{grid-template-columns:1fr}
+  .workspace-page #app .pill{min-height:44px}
+  .workspace-page .topbar-actions{display:grid;grid-template-columns:1fr;width:100%}
+  .workspace-page .control-group{display:grid;grid-template-columns:auto 1fr 1fr;align-items:center}
+}
