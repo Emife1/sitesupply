@@ -133,3 +133,14 @@ const campaign = ['utm_source','utm_medium','utm_campaign'].reduce((out,key) => 
   return out;
 }, {});
 if (Object.keys(campaign).length) sessionStorage.setItem('sitesupply_campaign', JSON.stringify(campaign));
+
+
+const SIVANTA_WIDGET_URL = 'https://sivanta-agent-platform.vercel.app/widget/wc_XGcCgcET-0Y-7R2LRP33rSyKjEnZCQlR.js';
+if (!document.querySelector('script[data-sitesupply-sivanta]')) {
+  const chatScript = document.createElement('script');
+  chatScript.src = SIVANTA_WIDGET_URL;
+  chatScript.defer = true;
+  chatScript.dataset.sitesupplySivanta = 'true';
+  chatScript.dataset.sivantaKey = 'wc_XGcCgcET-0Y-7R2LRP33rSyKjEnZCQlR';
+  document.body.appendChild(chatScript);
+}

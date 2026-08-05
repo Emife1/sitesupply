@@ -51,10 +51,12 @@ const setSelectedSupplier = id => {
 const toggleCommand = open => store.setState({ commandOpen: typeof open === 'boolean' ? open : !state().commandOpen });
 
 function updateQuoteInput(categoryId, fieldId, value) {
-  store.patch(current => {
-    const quoteInputs = { ...current.quoteInputs, [categoryId]: { ...(current.quoteInputs[categoryId] || {}), [fieldId]: value } };
-    return { ...current, quoteInputs };
-  });
+  const current = state();
+  const quoteInputs = {
+    ...current.quoteInputs,
+    [categoryId]: { ...(current.quoteInputs[categoryId] || {}), [fieldId]: value }
+  };
+  store.setState({ quoteInputs }, { notify: false });
 }
 
 function buildShell(content, inspector) {
@@ -410,7 +412,14 @@ app.addEventListener('input', event => {
   if (target.matches('[data-search]')) return setQuery(target.value, { defer: true });
   if (target.matches('[data-command-input]')) return setQuery(target.value, { defer: true });
   if (target.matches('[data-country]')) return setCountry(target.value);
-  if (target.matches('[data-quote-input]')) return updateQuoteInput(target.dataset.category, target.dataset.quoteInput, target.value);
+  if (target.matches('input[data-quote-input]')) return updateQuoteInput(target.dataset.category, target.dataset.quoteInput, target.value);
+});
+
+app.addEventListener('change', event => {
+  const target = event.target;
+  if (target.matches('select[data-quote-input]')) {
+    updateQuoteInput(target.dataset.category, target.dataset.quoteInput, target.value);
+  }
 });
 
 app.addEventListener('submit', event => {
